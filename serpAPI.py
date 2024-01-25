@@ -13,7 +13,7 @@ def create_search_parameters(query, location, api_key, page_offset):
         "hl": "en",
         "google_domain": "google.com",
         "api_key": api_key,
-        "start: ": page_offset
+        "start": page_offset
     }
     return search_parameters
 
@@ -38,3 +38,4 @@ def perform_search(num_pages, file):
                                                 page_offset)
         write_page_to_file(search_results_as_json, page, file)
         page_offset += 10
+    print("Finished! Please check your results in the \'results.txt\' file")
