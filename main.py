@@ -1,10 +1,12 @@
 from serpAPI import perform_search
-from util_functions import write_page_to_file
+
+num_pages = 5
 
 
 def main():
-    json_data = perform_search()
-    write_page_to_file(json_data, "results.txt")
+    file = open("results.txt", "w")
+    perform_search(num_pages, file)
+    file.close()
 
 
 main()
