@@ -3,6 +3,13 @@ import json
 line_seperator = "\n" + ("-" * 256) + "\n"
 
 
+def get_user_input():
+    print("Please perform a Google job search...\n")
+    query = input("Please enter a job you would like to search for: ")
+    location = input("Please enter your desired location for this job: ")
+    return query, location
+
+
 def write_page_header(query, location, file):
     page_header = f"Generated output for {query} in {location}.\n"
     file.write(page_header)
