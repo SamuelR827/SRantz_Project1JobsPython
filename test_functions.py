@@ -15,7 +15,7 @@ def test_write_page_header():
     assert 'Generated output for Software Engineer in New York.' in content
 
 
-def test_clean_data_no_metadata(self):
+def test_clean_data_no_metadata():
     # Test case where search_metadata key is present
     json_data = {
         "results": [{"title": "Job Result 1"}, {"title": "Job Result 2"}],
@@ -23,4 +23,4 @@ def test_clean_data_no_metadata(self):
     }
     cleaned_data = clean_data_from_json(json_data)
     # Ensure search_metadata key is removed
-    self.assertNotIn("search_metadata", cleaned_data)
+    assert ('search_metadata' in cleaned_data) is False
