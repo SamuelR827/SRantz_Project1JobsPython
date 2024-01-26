@@ -33,12 +33,15 @@ def serpapi_search(query, location, api_key, page_number, page_offset):
         This function calls the search_parameters function to get the parameters dictionary
         and then calls the serpapi google search with the parameters
         and returns the json_data results as a dictionary."""
-    print(f"Generating Page {page_number} results for {query} positions in {location}...\n")
+    if not location.strip():
+        print(f"Generating Page {page_number} results for {query} positions in no specific location")
+    else:
+        print(f"Generating Page {page_number} results for {query} positions in {location}...\n")
     # function call to generate parameter dictionary
     search_parameters = create_search_parameters(query, location, api_key, page_offset)
     # serpapi call
     search = GoogleSearch(search_parameters)
-    # get results as dictionary/json
+    # get results as dictionary
     results = search.get_dict()
     return results
 
