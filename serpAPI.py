@@ -19,7 +19,6 @@ def secrets_handling():
         return secrets.secret_api_key
     except ImportError:
         # if import error exception occurs print error message and return no secrets
-        print("Oh nos! An import error! Did you create a secrets.py file!")
         return "No secrets"
 
 
@@ -93,3 +92,4 @@ def perform_search(num_pages, file):
     # catch any exceptions and print error message
     except Exception as exception:
         print(f"Oh nos! An error occurred: {exception}")
+        print("Did you create a secrets.py file?")
