@@ -67,7 +67,6 @@ def perform_search(num_pages, file):
         query, location = get_user_input()
         # write header to desire file by calling function with query, location, and desired file
         write_file_header(query, location, file)
-
         # loops based on the page amount, for each page perform a search, everytime a loop occurs
         # the page offset increases to generate multiple pages of results
         for page in range(1, num_pages + 1):
