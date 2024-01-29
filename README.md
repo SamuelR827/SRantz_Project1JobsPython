@@ -28,10 +28,11 @@ Requirements
 - Install serpAPI in your project directory
     - pip install google-search-results
 
-Secrets.py
+secrets.py
 
-- The user must create a secrets.py file in the project directory and type in a single line of code
+- The user must create a file named "secrets.py" in the project directory and type in a single line of code
 - secret_api_key = "insert your api key here"
+- Otherwise, the project will not run
 
 This project prompts the user to search for a job. The user doesn't have to enter there api key everytime they perform
 a search.
