@@ -33,12 +33,12 @@ Secrets.py
 - The user must create a secrets.py file in the project directory and type in a single line of code
 - secret_api_key = "insert your api key here"
 
-This project prompts the user to search for a job. The user doesn't have to enter there api key everythime they perform
+This project prompts the user to search for a job. The user doesn't have to enter there api key everytime they perform
 a search.
 However, they must have there secrets.py file configured properly in the project directory.
-The user must type in a job they would like to search for and press enter. Optionally it will asks the user
+The user must type in a job they would like to search for and press enter. Optionally it will ask the user
 to specify a location for that job. The user may type in a location and
-press enter or leave the location blank to skip. This program will then use serpAPI to perform a google search
+press enter or leave the location blank to skip. This program will then use serpAPI to perform a Google search
 of the user's entered job and generate json results in a text file.
 This file will be named results.txt and in the project directory that was cloned.
 By default, 5 pages of results will be generated with each page being clearly seperated.
