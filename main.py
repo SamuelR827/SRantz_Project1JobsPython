@@ -1,9 +1,3 @@
-""" This is the main module for executing the problem. One main function is included in this
-module for executing the program. """
-
-from serpAPI import perform_search
-
-
 def main():
     """ The main function for running the program. Opens a file based on a hard-coded filename
         and calls the perform_search function from the serpapi module with the created file as well as
@@ -17,10 +11,18 @@ def main():
         num_pages = 5
         # open file using with open to properly close file in case of exceptions
         with open(filename, "w") as file:
-            # call perform_search function with created file and desired page count
+            try:
+                # Import inside the try block to catch ImportError
+                from secrets import perform
+            except ImportError as import_error:
+                print("Oh nos! An ImportError has occurred. Did you create a secrets.py file?")
+                print(import_error)
+                return  # Return or handle the exception as needed
+            # Now that the import is successful, call perform_search function
+            from serpAPI import perform_search
             perform_search(num_pages, file)
-    except ImportError as exception:
-        print("Oh nos! An error has occurred. Did you create a secrets.py file?")
+    except Exception as exception:
+        print("Oh nos! An error has occurred.")
         print(exception)
 
 
