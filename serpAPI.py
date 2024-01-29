@@ -1,13 +1,26 @@
 from serpapi import GoogleSearch
 
+
 """ This module handles functions related to the serpapi library. These functions
 allow the user to perform a search of google job listings using searchapi parameters,
 creating a search query, and running the search. """
 
-from secrets import secret_api_key
 from util_functions import write_file_header
 from util_functions import write_page_to_file
 from util_functions import get_user_input
+
+
+def secrets_handling():
+    """ This function imports secrets but with error handling
+    if the user hasn't created a secrets.py file."""
+    try:
+        # try to import secrets
+        import secrets
+        return secrets.secret_api_key
+    except ImportError:
+        # if import error exception occurs print error message and return no secrets
+        print("Oh nos! An import error! Did you create a secrets.py file!")
+        return "No secrets"
 
 
 def create_search_parameters(query, location, api_key, page_offset):
@@ -50,6 +63,8 @@ def perform_single_search(query, location, page, page_offset, file):
     """ This function performs a single search based on the generated query. It writes the json results
     to a file by calling the write_page_to_file function. This function passed the desired file
     and page as a parameter. A secret api key is fetched from a secret file for security."""
+    # call secret handling function to make sure exceptions are handled if no secret found
+    secret_api_key = secrets_handling()
     search_results_as_json = serpapi_search(query, location, secret_api_key, page, page_offset)
     write_page_to_file(search_results_as_json, page, file)
 
