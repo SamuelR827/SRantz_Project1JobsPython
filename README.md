@@ -7,7 +7,7 @@ Install/Run directions
 
 - Open your terminal in desired location
 - Clone the repository: git clone https://github.com/SamuelR827/SRantz_Project1JobsPython.git
-- Make sure requirements are configured properly(see below)
+- Make sure requirements are configured properly (see below)
 - Make sure to configure your secrets! (see below)
 - Find the main.py file using your terminal
 - Run the main python script by typing "python main.py" in your terminal
