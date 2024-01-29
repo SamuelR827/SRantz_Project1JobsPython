@@ -12,13 +12,14 @@ def main():
         # open file using with open to properly close file in case of exceptions
         with open(filename, "w") as file:
             try:
-                # Import inside the try block to catch ImportError
-                from secrets import perform
+                # test import inside the try block to catch ImportError if secrets file doesn't exist
+                import secrets
             except ImportError as import_error:
                 print("Oh nos! An ImportError has occurred. Did you create a secrets.py file?")
                 print(import_error)
-                return  # Return or handle the exception as needed
-            # Now that the import is successful, call perform_search function
+                # Return or handle the exception to prevent further issue
+                return
+            # Only if the test import is successful, then import call perform_search function
             from serpAPI import perform_search
             perform_search(num_pages, file)
     except Exception as exception:
