@@ -36,7 +36,7 @@ def serpapi_search(query, location, api_key, page_number, page_offset):
     if not location.strip():
         print(f"Generating Page {page_number} results for {query} positions in no specific location")
     else:
-        print(f"Generating Page {page_number} results for {query} positions in {location}...\n")
+        print(f"Generating Page {page_number} results for {query} positions near {location}...\n")
     # function call to generate parameter dictionary
     search_parameters = create_search_parameters(query, location, api_key, page_offset)
     # serpapi call

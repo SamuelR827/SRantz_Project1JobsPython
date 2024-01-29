@@ -39,7 +39,7 @@ def write_file_header(query, location, file):
     if not location.strip():
         page_header = f"Generated output for {query} in no specific location.\n"
     else:
-        page_header = f"Generated output for {query} in {location}.\n"
+        page_header = f"Generated output for {query} near {location}.\n"
     file.write(page_header)
 
 

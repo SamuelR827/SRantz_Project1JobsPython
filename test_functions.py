@@ -12,7 +12,7 @@ def test_write_page_header():
     write_file_header('Software Engineer', 'New York', file)
     file.seek(0)
     content = file.read()
-    assert 'Generated output for Software Engineer in New York.' in content
+    assert 'Generated output for Software Engineer near New York.' in content
 
 
 def test_clean_data_no_metadata():
