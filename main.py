@@ -19,7 +19,7 @@ def main():
         with open(filename, "w") as file:
             # call perform_search function with created file and desired page count
             perform_search(num_pages, file)
-    except Exception as exception:
+    except ImportError as exception:
         print("Oh nos! An error has occurred. Did you create a secrets.py file?")
         print(exception)
 
