@@ -51,29 +51,9 @@ def write_page_to_file(json_data, page, file):
         parameter and converted into a string using the json dumps method."""
     # define page number string
     page_number_to_write = "Page " + str(page) + "\n"
-    # call clean_data_from_json function to remove unnecessary keys from output
-    # keep just actual job search_results
-    json_data_no_metadata = clean_data_from_json(json_data)
     # dump json object into string using json dumps.
-    lines_to_write = json.dumps(json_data_no_metadata, indent=4)
+    lines_to_write = json.dumps(json_data, indent=4)
     # write page #, json data as a string, and line seperator to file
     file.write(page_number_to_write)
     file.write(lines_to_write)
     file.write(line_seperator)
-
-
-def clean_data_from_json(json_data):
-    """ This function removes all unnecessary keys from the json_data, since the
-    data is read as a python dictionary. All the unnecessary keys(search_metadata, search_parameters,
-    chips) are popped if found."""
-    # pop search_metadata key if found
-    if 'search_metadata' in json_data:
-        json_data.pop('search_metadata')
-    # pop search_parameters key if found
-    if 'search_parameters' in json_data:
-        json_data.pop('search_parameters')
-    # pop chips key if found
-    if 'chips' in json_data:
-        json_data.pop('chips')
-    # return new json data without unnecessary keys
-    return json_data

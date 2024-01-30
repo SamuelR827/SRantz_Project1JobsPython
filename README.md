@@ -18,7 +18,7 @@ Requirements
 
 - Git (only to clone the project)
 - Python 3.9 or 3.10 (python --version)
-- This project should handle standard python packages for you.
+- This project should handle standard python packages for you. If not see requirements.txt
 - The project relies on a library known as serpAPI to fetch google results.
 - If you have issues with the project running. You are likely missing the serpAPI package, and python is not detecting any serpAPI packages. Run these commands to install the package
 - Install pip in terminal

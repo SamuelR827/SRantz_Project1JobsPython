@@ -2,7 +2,6 @@
 more unit tests as the project is expanded more."""
 from io import StringIO
 
-from util_functions import clean_data_from_json
 from util_functions import write_file_header
 
 
@@ -13,14 +12,3 @@ def test_write_page_header():
     file.seek(0)
     content = file.read()
     assert 'Generated output for Software Engineer near New York.' in content
-
-
-def test_clean_data_no_metadata():
-    # Test case where search_metadata key is present
-    json_data = {
-        "results": [{"title": "Job Result 1"}, {"title": "Job Result 2"}],
-        "search_metadata": {"some_key": "some_value"}
-    }
-    cleaned_data = clean_data_from_json(json_data)
-    # Ensure search_metadata key is removed
-    assert ('search_metadata' in cleaned_data) is False

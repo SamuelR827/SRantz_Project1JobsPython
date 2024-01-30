@@ -1,6 +1,5 @@
 from serpapi import GoogleSearch
 
-
 """ This module handles functions related to the serpapi library. These functions
 allow the user to perform a search of google job listings using searchapi parameters,
 creating a search query, and running the search. """
@@ -55,7 +54,8 @@ def serpapi_search(query, location, api_key, page_number, page_offset):
     search = GoogleSearch(search_parameters)
     # get results as dictionary
     results = search.get_dict()
-    return results
+    # keep just actual job search_results key and return it
+    return results.get("jobs_results")
 
 
 def perform_single_search(query, location, page, page_offset, file):
