@@ -14,11 +14,6 @@ def create_db_connection(db_file: str) -> Tuple[sqlite3.Connection, sqlite3.Curs
         return db_connection, db_cursor
 
 
-def db_close(db_connection: sqlite3.Connection):
-    db_connection.commit()
-    db_connection.close()
-
-
 def create_table_job_list(cursor: sqlite3.Cursor):
     cursor.execute('''CREATE TABLE IF NOT EXISTS jobs(
     job_id INTEGER PRIMARY AUTOINCREMENT,
@@ -36,6 +31,7 @@ def create_table_job_list(cursor: sqlite3.Cursor):
     FOREIGN KEY (job_qualification) REFERENCES job_qualifcations(qualifications_name)
     ON DELETE CASCADE ON UPDATE NO ACTION
     );''')
+    cursor.execute('''DELETE FROM job_list''')
 
 
 def create_table_job_links(cursor: sqlite3.Cursor):
@@ -43,6 +39,7 @@ def create_table_job_links(cursor: sqlite3.Cursor):
         link_id INTEGER PRIMARY AUTOINCREMENT,
         link_name TEXT
         );''')
+    cursor.execute('''DELETE FROM job_links''')
 
 
 def create_table_job_qualifications(cursor: sqlite3.Cursor):
@@ -50,9 +47,21 @@ def create_table_job_qualifications(cursor: sqlite3.Cursor):
         qualification_id INTEGER PRIMARY AUTOINCREMENT,
         qualifications_name TEXT NOT NULL
         );''')
+    cursor.execute('''DELETE FROM job_qualifications''')
 
 
 def setup_db(cursor: sqlite3.Cursor):
     create_table_job_links(cursor)
     create_table_job_qualifications(cursor)
     create_table_job_list(cursor)
+
+
+def db_close(db_connection: sqlite3.Connection):
+    db_connection.commit()
+    db_connection.close()
+
+
+
+
+
+
