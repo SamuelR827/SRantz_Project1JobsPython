@@ -134,7 +134,7 @@ def insert_job_data_to_table(cursor: sqlite3.Cursor, job_entry: Dict[str, Any]) 
     If a database error occurs an exception will be caught and printed. """
     try:
         cursor.execute(
-            '''INSERT INTO jobs (title, company, description, location, remote, posted, salary) 
+            '''INSERT INTO jobs (title, company, description, location, remote, posted, salary)
             VALUES(?, ?, ?, ?, ?, ?, ?)''',
             (
                 job_entry.get('title', None),
