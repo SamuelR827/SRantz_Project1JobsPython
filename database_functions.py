@@ -17,24 +17,23 @@ def create_db_connection(db_file: str) -> Tuple[sqlite3.Connection, sqlite3.Curs
 def create_table_job_list(cursor: sqlite3.Cursor):
     cursor.execute('''CREATE TABLE IF NOT EXISTS jobs(
     job_id INTEGER NOT NULL PRIMARY KEY,
-    job_title TEXT NOT NULL,
-    company_name TEXT NOT NULL,
-    job_description TEXT NOT NULL,
-    job_location TEXT NOT NULL,
-    job_remote TEXT NOT NULL,
-    job_age TEXT NOT NULL,
-    salary TEXT DEFAULT NULL,
-    job_link TEXT DEFAULT NULL,
-    job_qualification TEXT NOT NULL
+    title TEXT NOT NULL,
+    company TEXT NOT NULL,
+    description TEXT NOT NULL,
+    location TEXT NOT NULL,
+    remote TEXT NOT NULL,
+    posted TEXT NOT NULL,
+    salary TEXT DEFAULT NULL
     );''')
     cursor.execute('''DELETE FROM jobs''')
 
 
 def create_table_job_links(cursor: sqlite3.Cursor):
     cursor.execute('''CREATE TABLE IF NOT EXISTS job_links(
-        link_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        link_name TEXT DEFAULT NULL,
-        FOREIGN KEY(link_name) REFERENCES jobs(job_link)
+        job_id INTEGER NOT NULL,
+        link_id INTEGER NOT NULL PRIMARY KEY ,
+        link TEXT DEFAULT NULL,
+        FOREIGN KEY(job_id) REFERENCES jobs(job_id)
         ON DELETE CASCADE ON UPDATE NO ACTION
         );''')
     cursor.execute('''DELETE FROM job_links''')
@@ -42,9 +41,10 @@ def create_table_job_links(cursor: sqlite3.Cursor):
 
 def create_table_job_qualifications(cursor: sqlite3.Cursor):
     cursor.execute('''CREATE TABLE IF NOT EXISTS job_qualifications(
-        qualification_id INTEGER PRIMARY KEY,
-        qualifications_name TEXT NOT NULL,
-        FOREIGN KEY (qualifications_name) REFERENCES jobs(job_qualification)
+        job_id INTEGER NOT NULL,
+        qualification_id INTEGER NOT NULL PRIMARY KEY,
+        qualification TEXT NOT NULL,
+        FOREIGN KEY (job_id) REFERENCES jobs(job_id)
         ON DELETE CASCADE ON UPDATE NO ACTION
         );''')
     cursor.execute('''DELETE FROM job_qualifications''')
@@ -56,20 +56,32 @@ def setup_db(cursor: sqlite3.Cursor):
     create_table_job_list(cursor)
 
 
-def insert_data_to_table(cursor: sqlite3.Cursor, json_data):
-    for job_entry in json_data:
-        cursor.execute('''INSERT INTO jobs VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
-                       (
-                           None,
-                           job_entry.get('title', None),
-                           job_entry.get('company_name', None),
-                           job_entry.get('description', None),
-                           job_entry.get('location', None),
-                           find_remote_in_job(job_entry),
-                           find_job_age(job_entry),
-                           find_job_salary(job_entry),
-                            "Shish",
-                            "shash"))
+def insert_link_to_table(cursor: sqlite3.Cursor, job_id, link_list):
+    for link in link_list:
+        cursor.execute('''INSERT INTO job_links(job_id, link) VALUES (?, ?)''',
+                       (job_id,
+                        link))
+
+
+def insert_qualifications_to_table(cursor: sqlite3.Cursor, job_id, qualification_list):
+    for qualification in qualification_list:
+        cursor.execute('''INSERT INTO job_qualifications(job_id, qualification) VALUES (?, ?)''',
+                       (job_id, qualification))
+
+
+def insert_job_data_to_table(cursor: sqlite3.Cursor, job_entry):
+    cursor.execute(
+        '''INSERT INTO jobs (title, company, description, location, remote, posted, salary) 
+        VALUES(?, ?, ?, ?, ?, ?, ?)''',
+        (
+            job_entry.get('title', None),
+            job_entry.get('company_name', None),
+            job_entry.get('description', None),
+            job_entry.get('location', None),
+            find_remote_in_job(job_entry),
+            find_job_age(job_entry),
+            find_job_salary(job_entry)))
+    return cursor.lastrowid
 
 
 def find_remote_in_job(job_entry):
@@ -94,15 +106,13 @@ def find_job_salary(job_entry):
     job_highlights = job_entry.get('job_highlights', None)
     if job_highlights is None:
         return 'No Salary Specified'
-    benefits = None
     for highlight in job_highlights:
         if highlight.get('title') == 'Benefits':
-            benefits = highlight
-    if benefits is None:
-        return 'No Salary Specified'
-    for benefit in benefits:
-        if 'salary' in benefit.lower():
-            return benefit
+            benefits = highlight.get('items', [])
+            for benefit in benefits:
+                if 'salary:' in benefit.lower() or 'pay:' in benefit.lower() or '$' in benefit:
+                    return benefit.strip()
+            return 'No Salary Specified'
     return 'No Salary Specified'
 
 
