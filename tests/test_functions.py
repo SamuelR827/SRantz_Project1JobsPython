@@ -6,13 +6,13 @@
 
 import pytest
 
-from database_functions import create_db_connection
-from database_functions import create_table_job_links
-from database_functions import create_table_job_list
-from database_functions import create_table_job_qualifications
-from database_functions import save_data_to_database
-from serpAPI import secrets_handling
-from serpAPI import serpapi_search
+from ..database_functions import create_db_connection
+from ..database_functions import create_table_job_links
+from ..database_functions import create_table_job_list
+from ..database_functions import create_table_job_qualifications
+from ..database_functions import save_data_to_database
+from ..serpAPI import secrets_handling
+from ..serpAPI import serpapi_search
 
 
 @pytest.fixture(scope="module")
