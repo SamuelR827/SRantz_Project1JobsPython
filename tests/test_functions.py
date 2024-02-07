@@ -3,6 +3,8 @@
     The second test should create a new empty database, run the table creation function,
     then run the save data to database function to check to see
     that the database contains the test jobs."""
+from sqlite3 import Connection, Cursor
+from typing import Generator, Any
 
 import pytest
 
@@ -37,7 +39,7 @@ def mock_db_connection():
     test_connection.close()
 
 
-def test_save_data_to_database(mock_db_connection):
+def test_save_data_to_database(mock_db_connection: Generator[tuple[Connection, Cursor], Any, None]) -> None:
     """ This function tests the save_data_to_database function. Making
     sure that the database is created properly and inserted with jobs data."""
     # call mock_db_connection to create test cursor and connection
@@ -96,7 +98,7 @@ def test_save_data_to_database(mock_db_connection):
     assert result is not None
 
 
-def test_search_results_count():
+def test_search_results_count() -> None:
     """ This function tests to make sure 50 search results are generated with
     serpapi_search when 5 pages are given. Test is a mock form of perform_search
     function in main module. """
