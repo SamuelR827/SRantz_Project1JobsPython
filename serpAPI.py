@@ -14,7 +14,7 @@ def secrets_handling() -> str:
         # try to import secrets
         import secrets
         return secrets.api_key
-    except ImportError:
+    except AttributeError:
         # if import error exception occurs print error message and return no secrets
         return 'No secrets'
 
