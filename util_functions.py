@@ -85,7 +85,7 @@ def find_job_salary(job_entry: Dict[str, Any]) -> str:
             # loop through each benefit and check if each benefit contain keywords
             # if match return the benefit
             for benefit in benefits:
-                if 'salary:' in benefit.lower() or 'pay:' in benefit.lower() or '$' in benefit:
+                if 'salary' in benefit.lower() or 'pay' in benefit.lower() or '$' in benefit:
                     return benefit.strip()
             # return no salary specified if no benefit containing keywords fond
             return 'No Salary Specified'
