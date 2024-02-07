@@ -38,3 +38,8 @@ jobs:
       run: |
         pip install pytest
         pytest
+    - name: Build Secrets
+      env:
+        API_KEY: ${{ secrets.SERPAPI_KEY }}
+      run: |
+        echo 'api_key = "'$API_KEY'"' >> secrets.py
