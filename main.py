@@ -16,8 +16,12 @@ def perform_search(cursor: sqlite3.Cursor, num_pages: int) -> None:
     and saves the data to a database. The function keeps track of a page offset variable to print
     the next page of the Google results. This function uses a loop to execute multiple
     searches and is wrapped inside a try except statement to catch any exceptions that occur. """
-    # call secrets handling function to throw an exception if no secret.py file is found
+    # call secrets handling function to cancel if no secret.py file is found
     secret_api_key = secrets_handling()
+    # if secret_api_key returns no secrets and return to prevent rest of the function from running
+    if secret_api_key == 'No secrets':
+        print('Oh nos! An error occurred: Missing API key. Did you create a secrets.py file?')
+        return
     # page offset variable to keep track of the current page, starts at 0 for page 1 in serpapi results
     page_offset = 0
     # try except block to handle any exceptions likely caused by user-input error.
@@ -29,6 +33,9 @@ def perform_search(cursor: sqlite3.Cursor, num_pages: int) -> None:
         for page in range(1, num_pages + 1):
             # call serpapi search to get the json results
             search_results_as_json = serpapi_search(query, location, secret_api_key, page, page_offset)
+            # if search results is None, raise a ValueError
+            if search_results_as_json is None:
+                raise ValueError("Search returned no results.")
             # add json results to the database by calling the save database function
             save_data_to_database(cursor, search_results_as_json)
             # increment page offset by 10, which means one page

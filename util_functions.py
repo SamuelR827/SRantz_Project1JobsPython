@@ -63,7 +63,8 @@ def find_job_age(job_entry: Dict[str, Any]) -> str:
     if posted_at is None:
         return 'No Job Posted Date Specified'
     # if found key/value pair return the posted_at date stripped
-    return posted_at.strip()
+    if posted_at is not None:
+        return posted_at.strip()
 
 
 def find_job_salary(job_entry: Dict[str, Any]) -> str:
