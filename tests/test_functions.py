@@ -11,7 +11,6 @@ from ..database_functions import create_table_job_links
 from ..database_functions import create_table_job_list
 from ..database_functions import create_table_job_qualifications
 from ..database_functions import save_data_to_database
-from ..serpAPI import secrets_handling
 from ..serpAPI import serpapi_search
 
 
@@ -88,7 +87,7 @@ def test_search_results_count():
     result_count = 0
     query = "computer programmer"
     location = "new york"
-    api_key = secrets_handling()
+    api_key = "blah"
     page_offset = 0
     num_pages = 5
     for page in range(1, num_pages + 1):
