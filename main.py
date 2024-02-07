@@ -1,6 +1,7 @@
 """ This is the main module for executing the problem. One main function is included in this
 module for executing the program. """
 import sqlite3
+import sys
 
 from database_functions import create_db_connection
 from database_functions import db_close
@@ -20,8 +21,7 @@ def perform_search(cursor: sqlite3.Cursor, num_pages: int) -> None:
     secret_api_key = secrets_handling()
     # if secret_api_key returns no secrets and return to prevent rest of the function from running
     if secret_api_key == 'No secrets':
-        print('Oh nos! An error occurred: Missing API key. Did you create a secrets.py file?')
-        return
+        sys.exit('Oh nos! An error occurred: Missing API key. Did you create a secrets.py file?')
     # page offset variable to keep track of the current page, starts at 0 for page 1 in serpapi results
     page_offset = 0
     # try except block to handle any exceptions likely caused by user-input error.
@@ -44,7 +44,7 @@ def perform_search(cursor: sqlite3.Cursor, num_pages: int) -> None:
         print("Finished! Please check your database in the project directory...")
     # catch any exceptions and print error message
     except Exception as exception:
-        print(f'Oh nos! An error occurred: {exception}')
+        sys.exit(f'Oh nos! An error occurred: {exception}')
 
 
 def main() -> None:
