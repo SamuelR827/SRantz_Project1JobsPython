@@ -20,7 +20,7 @@ def mock_db_connection():
     """ This function creates a mock database for testing the function
     that saves data to the database."""
     # create a mock db_file
-    db_file = 'tests/test_results.db'
+    db_file = 'test_results.db'
     # create a mock connection and cursor
     test_connection, test_cursor = create_db_connection(db_file)
 
