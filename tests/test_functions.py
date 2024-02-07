@@ -17,23 +17,32 @@ from serpAPI import serpapi_search
 
 @pytest.fixture(scope="module")
 def mock_db_connection():
+    """ This function creates a mock database for testing the function
+    that saves data to the database."""
+    # create a mock db_file
     db_file = 'tests/test_results.db'
+    # create a mock connection and cursor
     test_connection, test_cursor = create_db_connection(db_file)
 
+    # create mock tables by calling database create tables function
     create_table_job_qualifications(test_cursor)
     create_table_job_links(test_cursor)
     create_table_job_list(test_cursor)
 
+    # teardown/cleanup of connection and cursor
     yield test_connection, test_cursor
+    # commit and close
     test_cursor.close()
     test_connection.commit()
     test_connection.close()
 
 
 def test_save_data_to_database(mock_db_connection):
+    """ This function tests the save_data_to_database function. Making
+    sure that the database is created properly and inserted with jobs data."""
+    # call mock_db_connection to create test cursor and connection
     test_connection, test_cursor = mock_db_connection
-
-    # sample data
+    # sample data in json format
     test_json_job_data = [
         {"title": "Some Job Title",
          "company_name": "Some Company Name",
@@ -77,22 +86,38 @@ def test_save_data_to_database(mock_db_connection):
          "job_id": "some job id"
          },
     ]
+    # call function to test saving data
     save_data_to_database(test_cursor, test_json_job_data)
     # Check if the test data exists in the database
     test_cursor.execute('''SELECT * FROM jobs WHERE title = "Some Job Title"''')
+    # fetch the single result and create a variable
     result = test_cursor.fetchone()
+    # assert the result is not null
     assert result is not None
 
 
 def test_search_results_count():
+    """ This function tests to make sure 50 search results are generated with
+    serpapi_search when 5 pages are given. Test is a mock form of perform_search
+    function in main module. """
+    # variable to count the results
     result_count = 0
+    # sample query and location
     query = "computer programmer"
     location = "new york"
+    # get api key with secret handling
     api_key = secrets_handling()
+    # keep track of pages
     page_offset = 0
+    # variable to generate 5 pages - 50 results
     num_pages = 5
+    # loop based on the amount of pages specified
     for page in range(1, num_pages + 1):
+        # call serpapi search with sample query and return jobs_results as json
         search_results_as_json = serpapi_search(query, location, api_key, page, page_offset)
+        # count each item in the list jobs_results
         result_count += len(search_results_as_json)
+        # increment page offset
         page_offset += 10
+    # make sure the result count is greater or equal to 50, print failing message otherwise
     assert result_count >= 50, f"Expected at least 50 data items, but got {result_count}"
