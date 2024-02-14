@@ -5,11 +5,13 @@ import sys
 
 from database_functions import create_db_connection
 from database_functions import db_close
-from database_functions import save_data_to_database
+from database_functions import save_searched_data_to_database
 from database_functions import setup_db
+from util_functions import get_user_input
 from serpAPI import secrets_handling
 from serpAPI import serpapi_search
-from util_functions import get_user_input
+from excel_functions import load_job_workbook
+from excel_functions import get_job_data
 
 
 def perform_search(cursor: sqlite3.Cursor, num_pages: int) -> None:
@@ -37,7 +39,7 @@ def perform_search(cursor: sqlite3.Cursor, num_pages: int) -> None:
             if search_results_as_json is None:
                 raise ValueError("Search returned no results.")
             # add json results to the database by calling the save database function
-            save_data_to_database(cursor, search_results_as_json)
+            save_searched_data_to_database(cursor, search_results_as_json)
             # increment page offset by 10, which means one page
             page_offset += 10
         # finish print message for the user
@@ -48,12 +50,14 @@ def perform_search(cursor: sqlite3.Cursor, num_pages: int) -> None:
 
 
 def main() -> None:
+    workbook = load_job_workbook()
+    get_job_data(workbook)
     """ The main function for running the program. Creates a connection to sqlite to handle generated data
     and calls the perform_search function to generate that data with the created database as well as
     hard-coded number of pages to generate. """
     # hardcoded variable for desired amount of pages for now
     # you may change this if desired
-    num_pages = 5
+    num_pages = 1
     # create database connection by calling the connection function
     connection, cursor = create_db_connection('job_results.db')
     # call the database function

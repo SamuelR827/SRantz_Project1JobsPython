@@ -12,7 +12,7 @@ from database_functions import create_db_connection
 from database_functions import create_table_job_links
 from database_functions import create_table_job_list
 from database_functions import create_table_job_qualifications
-from database_functions import save_data_to_database
+from database_functions import save_searched_data_to_database
 from serpAPI import secrets_handling
 from serpAPI import serpapi_search
 
@@ -89,7 +89,7 @@ def test_save_data_to_database(mock_db_connection: Generator[tuple[Connection, C
          },
     ]
     # call function to test saving data
-    save_data_to_database(test_cursor, test_json_job_data)
+    save_searched_data_to_database(test_cursor, test_json_job_data)
     # Check if the test data exists in the database
     test_cursor.execute('''SELECT * FROM jobs WHERE title = "Some Job Title"''')
     # fetch the single result and create a variable

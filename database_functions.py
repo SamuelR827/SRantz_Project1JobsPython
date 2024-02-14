@@ -149,7 +149,7 @@ def insert_job_data_to_table(cursor: sqlite3.Cursor, job_entry: Dict[str, Any]) 
     return cursor.lastrowid
 
 
-def save_data_to_database(cursor: sqlite3.Cursor, json_data: List[Dict[str, Any]]) -> None:
+def save_searched_data_to_database(cursor: sqlite3.Cursor, json_data: List[Dict[str, Any]]) -> None:
     """ This function will loop through each job_entry. Find the links
     and qualifications of that job by calling find_job functions and insert the data
     to corresponding tables by calling the insert data to table functions.
@@ -161,6 +161,8 @@ def save_data_to_database(cursor: sqlite3.Cursor, json_data: List[Dict[str, Any]
         job_links = find_job_links(job_entry)
         insert_qualifications_to_table(cursor, job_id, job_qualifications)
         insert_link_to_table(cursor, job_id, job_links)
+
+# def save_worksheet_data_to_database(cursor: sqlite3.Cursor)
 
 
 def db_close(db_connection: sqlite3.Connection) -> None:
