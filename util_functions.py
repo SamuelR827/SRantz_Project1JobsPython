@@ -40,14 +40,11 @@ def find_remote_in_job(job_entry: Dict[str, Any]) -> str:
     # return yes if job location is anywhere as that means remote work is possible
     if job_entry.get('location').strip() == 'Anywhere':
         return 'Yes'
-    # return no if no work_from_home key is in the job entry
-    if work_from_home is None:
-        return 'No'
-    # return yes if the work_from_home value is True
-    if work_from_home == 'True':
+    # return yes if work_from_home value is found/not none
+    elif work_from_home:
         return 'Yes'
-    # return no if no other case was satisfied
-    return 'No'
+    else:
+        return 'No'
 
 
 def find_job_age(job_entry: Dict[str, Any]) -> str:

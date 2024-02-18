@@ -1,4 +1,5 @@
 from openpyxl import load_workbook
+from database_functions import insert_worksheet_data_to_database
 
 
 def load_job_workbook():
@@ -7,7 +8,7 @@ def load_job_workbook():
     return job_worksheet
 
 
-def get_job_data(job_worksheet):
+def add_excel_job_data(cursor, job_worksheet):
     row_count = job_worksheet.max_row
     for row in range(2, row_count):
         company_name = job_worksheet.cell(row=row, column=1).value
@@ -18,7 +19,7 @@ def get_job_data(job_worksheet):
         salary_type = job_worksheet.cell(row=row, column=9).value
         salary = parse_salary(salary_min, salary_max, salary_type)
         job_name = job_worksheet.cell(row=row, column=10).value
-        print(company_name, posted_ago, location, salary, job_name)
+        insert_worksheet_data_to_database(cursor, job_name, company_name, location, posted_ago, salary)
 
 
 def parse_salary(salary_min, salary_max, salary_type):
@@ -27,7 +28,3 @@ def parse_salary(salary_min, salary_max, salary_type):
     else:
         salary = str(salary_min) + ' - ' + str(salary_max) + ' ' + salary_type
         return salary
-
-
-
-

@@ -45,9 +45,10 @@ def create_table_job_list(cursor: sqlite3.Cursor) -> None:
         location TEXT NOT NULL,
         remote TEXT NOT NULL,
         posted TEXT NOT NULL,
-        salary TEXT DEFAULT NULL
+        salary_min TEXT DEFAULT NULL
+        salary_max TEXT DEFAULT NULL
+        
         );''')
-        cursor.execute('''DELETE FROM jobs''')
     except sqlite3.Error as db_error:
         print(f'A database error has occurred: {db_error}')
 
@@ -67,7 +68,6 @@ def create_table_job_links(cursor: sqlite3.Cursor) -> None:
             FOREIGN KEY(job_id) REFERENCES jobs(job_id)
             ON DELETE CASCADE ON UPDATE NO ACTION
             );''')
-        cursor.execute('''DELETE FROM job_links''')
     except sqlite3.Error as db_error:
         print(f'A database error has occurred: {db_error}')
 
@@ -87,7 +87,6 @@ def create_table_job_qualifications(cursor: sqlite3.Cursor) -> None:
             FOREIGN KEY (job_id) REFERENCES jobs(job_id)
             ON DELETE CASCADE ON UPDATE NO ACTION
             );''')
-        cursor.execute('''DELETE FROM job_qualifications''')
     except sqlite3.Error as db_error:
         print(f'A database error has occurred: {db_error}')
 
@@ -137,10 +136,10 @@ def insert_job_data_to_table(cursor: sqlite3.Cursor, job_entry: Dict[str, Any]) 
             '''INSERT INTO jobs (title, company, description, location, remote, posted, salary)
             VALUES(?, ?, ?, ?, ?, ?, ?)''',
             (
-                job_entry.get('title', None),
-                job_entry.get('company_name', None),
-                job_entry.get('description', None),
-                job_entry.get('location', None),
+                job_entry.get('title', 'No Title Specified'),
+                job_entry.get('company_name', 'No Company Specified'),
+                job_entry.get('description', 'No Description Specified'),
+                job_entry.get('location', 'No Location Specified'),
                 find_remote_in_job(job_entry),
                 find_job_age(job_entry),
                 find_job_salary(job_entry)))
@@ -149,7 +148,7 @@ def insert_job_data_to_table(cursor: sqlite3.Cursor, job_entry: Dict[str, Any]) 
     return cursor.lastrowid
 
 
-def save_searched_data_to_database(cursor: sqlite3.Cursor, json_data: List[Dict[str, Any]]) -> None:
+def save_searched_data_to_database(cursor: sqlite3.Cursor, json_data: List[Dict[str, Any]], job_workbook) -> None:
     """ This function will loop through each job_entry. Find the links
     and qualifications of that job by calling find_job functions and insert the data
     to corresponding tables by calling the insert data to table functions.
@@ -162,7 +161,22 @@ def save_searched_data_to_database(cursor: sqlite3.Cursor, json_data: List[Dict[
         insert_qualifications_to_table(cursor, job_id, job_qualifications)
         insert_link_to_table(cursor, job_id, job_links)
 
-# def save_worksheet_data_to_database(cursor: sqlite3.Cursor)
+
+def insert_worksheet_data_to_database(cursor: sqlite3.Cursor, job_name, company_name, location, posted_ago, salary):
+    try:
+        cursor.execute(
+            '''INSERT INTO jobs (title, company, description, location, remote, posted, salary)
+            VALUES(?, ?, ?, ?, ?, ?, ?)''',
+            (
+                job_name,
+                company_name,
+                'No description Specified',
+                location,
+                'NA',
+                posted_ago,
+                salary))
+    except sqlite3.Error as db_error:
+        print(f'A database error has occurred: {db_error}')
 
 
 def db_close(db_connection: sqlite3.Connection) -> None:

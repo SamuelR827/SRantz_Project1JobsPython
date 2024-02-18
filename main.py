@@ -11,10 +11,10 @@ from util_functions import get_user_input
 from serpAPI import secrets_handling
 from serpAPI import serpapi_search
 from excel_functions import load_job_workbook
-from excel_functions import get_job_data
+from excel_functions import add_excel_job_data
 
 
-def perform_search(cursor: sqlite3.Cursor, num_pages: int) -> None:
+def perform_search(cursor: sqlite3.Cursor, num_pages: int, job_workbook) -> None:
     """ This function performs multiple searches based on the number of pages passed as a parameter
     and saves the data to a database. The function keeps track of a page offset variable to print
     the next page of the Google results. This function uses a loop to execute multiple
@@ -39,7 +39,7 @@ def perform_search(cursor: sqlite3.Cursor, num_pages: int) -> None:
             if search_results_as_json is None:
                 raise ValueError("Search returned no results.")
             # add json results to the database by calling the save database function
-            save_searched_data_to_database(cursor, search_results_as_json)
+            save_searched_data_to_database(cursor, search_results_as_json, job_workbook)
             # increment page offset by 10, which means one page
             page_offset += 10
         # finish print message for the user
@@ -50,8 +50,7 @@ def perform_search(cursor: sqlite3.Cursor, num_pages: int) -> None:
 
 
 def main() -> None:
-    workbook = load_job_workbook()
-    get_job_data(workbook)
+
     """ The main function for running the program. Creates a connection to sqlite to handle generated data
     and calls the perform_search function to generate that data with the created database as well as
     hard-coded number of pages to generate. """
@@ -59,11 +58,13 @@ def main() -> None:
     # you may change this if desired
     num_pages = 1
     # create database connection by calling the connection function
+    job_workbook = load_job_workbook()
     connection, cursor = create_db_connection('job_results.db')
     # call the database function
     setup_db(cursor)
     # call perform_search function with desired page count
-    perform_search(cursor, num_pages)
+    perform_search(cursor, num_pages, job_workbook)
+    add_excel_job_data(cursor, job_workbook)
     # close the database by calling the close database function
     db_close(connection)
 
