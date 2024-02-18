@@ -39,7 +39,7 @@ def perform_search(cursor: sqlite3.Cursor, num_pages: int, job_workbook) -> None
             if search_results_as_json is None:
                 raise ValueError("Search returned no results.")
             # add json results to the database by calling the save database function
-            save_searched_data_to_database(cursor, search_results_as_json, job_workbook)
+            save_searched_data_to_database(cursor, search_results_as_json)
             # increment page offset by 10, which means one page
             page_offset += 10
         # finish print message for the user

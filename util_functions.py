@@ -4,6 +4,7 @@
     Many of the functions defined in this file may be modified depending on how the
     data generated will be used in this project, or new functions may be created instead.
 """
+import re
 from typing import Tuple, Optional, List, Dict, Any, Union
 
 
@@ -64,31 +65,77 @@ def find_job_age(job_entry: Dict[str, Any]) -> str:
         return posted_at.strip()
 
 
-def find_job_salary(job_entry: Dict[str, Any]) -> str:
-    """ This function searches through a specified job's salary. It looks through the job_highlights
-    key which it's value is a list of dictionary's. The function looks for a dictionary
-    with the key/value pair. title:Benefits. If found it will look through the Benefits items which is a list
-    of strings. It will look for any strings that contain the words, salary, pay or the $ and return this string."""
-    # find job highlights list
-    job_highlights: Optional[List[Dict[str, Any]]] = job_entry.get('job_highlights', None)
-    # return no salary if there is no job highlights list
-    if job_highlights is None:
-        return 'No Salary Specified'
-    # loop through each highlight in highlights list to find a dictionary with
-    # the key value pair 'title: Benefits'
+# def find_job_salary(job_entry: Dict[str, Any]) -> str:
+#     """ This function searches through a specified job's salary. It looks through the job_highlights
+#     key which it's value is a list of dictionary's. The function looks for a dictionary
+#     with the key/value pair. title:Benefits. If found it will look through the Benefits items which is a list
+#     of strings. It will look for any strings that contain the words, salary, pay or the $ and return this string."""
+#     # find job highlights list
+#     job_highlights: Optional[List[Dict[str, Any]]] = job_entry.get('job_highlights', None)
+#     # return no salary if there is no job highlights list
+#     if job_highlights is None:
+#         return 'No Salary Specified'
+#     # loop through each highlight in highlights list to find a dictionary with
+#     # the key value pair 'title: Benefits'
+#     for highlight in job_highlights:
+#         if highlight.get('title') == 'Benefits':
+#             # if found key/value pair match create a list of strings from benefits
+#             benefits = highlight.get('items', [])
+#             # loop through each benefit and check if each benefit contain keywords
+#             # if match return the benefit
+#             for benefit in benefits:
+#                 if 'salary:' in benefit.lower() or 'pay:' in benefit.lower() or '$' in benefit:
+#                     return benefit.strip()
+#             # return no salary specified if no benefit containing keywords fond
+#             return 'No Salary Specified'
+#         # return no salary specified if no benefits key/value pair found
+#     return 'No Salary Specified'
+
+
+def find_job_salary(job_entry: Dict[str, Any]):
+    """This code is taken from Professor Santore's github solution from sprint 2.
+    It was slightly modified to work with my program."""
+    benefits_section = {}
+    job_highlights = job_entry.get('job_highlights')
     for highlight in job_highlights:
-        if highlight.get('title') == 'Benefits':
-            # if found key/value pair match create a list of strings from benefits
-            benefits = highlight.get('items', [])
-            # loop through each benefit and check if each benefit contain keywords
-            # if match return the benefit
-            for benefit in benefits:
-                if 'salary:' in benefit.lower() or 'pay:' in benefit.lower() or '$' in benefit:
-                    return benefit.strip()
-            # return no salary specified if no benefit containing keywords fond
-            return 'No Salary Specified'
-        # return no salary specified if no benefits key/value pair found
-    return 'No Salary Specified'
+        if highlight.get('title') == "Benefits":
+            benefits_section = highlight
+    min_salary = 0
+    max_salary = 0
+    if benefits_section:  # if we got a dictionary with stuff in it
+        for benefit_item in benefits_section['items']:
+            if 'range' in benefit_item.lower():
+                # from https://stackoverflow.com/questions/63714217/how-can-i-extract-numbers-containing-commas-from
+                # -strings-in-python
+                numbers = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?(?!\d)', benefit_item)
+                if numbers:  # if we found salary data, return it
+                    return int(numbers[0].replace(',', '')), int(numbers[1].replace(',', ''))
+            numbers = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?(?!\d)', benefit_item)
+            if len(numbers) == 2 and int(float(
+                    numbers[0].replace(',', ''))) > 30:  # some jobs just put the numbers in one item
+                # and the description in another
+                return int(numbers[0].replace(',', '')), int(numbers[1].replace(',', ''))
+            else:
+                return min_salary, max_salary
+    job_description = job_entry.get('description')
+    location = job_description.find("salary range")
+    if location < 0:
+        location = job_description.find("pay range")
+    if location < 0:
+        return min_salary, max_salary
+    numbers = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?(?!\d)', job_description[location:location + 50])
+    if numbers:
+        return int(numbers[0].replace(',', '')), int(numbers[1].replace(',', ''))
+    return min_salary, max_salary
+
+
+def find_job_rate(min_salary):
+    salary_time_period = "NA"
+    if 0 < min_salary < 900:
+        salary_time_period = 'Hourly'
+    elif min_salary > 0:
+        salary_time_period = "Yearly"
+    return salary_time_period
 
 
 def find_job_qualifications(job_entry: Dict[str, Any]) -> List[str]:

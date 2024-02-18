@@ -7,6 +7,7 @@ from typing import Tuple, List, Dict, Any
 from util_functions import find_job_age
 from util_functions import find_job_links
 from util_functions import find_job_qualifications
+from util_functions import find_job_rate
 from util_functions import find_job_salary
 from util_functions import find_remote_in_job
 
@@ -38,16 +39,16 @@ def create_table_job_list(cursor: sqlite3.Cursor) -> None:
     run new data will be generated and replaced.If a database error occurs an exception will be caught and printed."""
     try:
         cursor.execute('''CREATE TABLE IF NOT EXISTS jobs(
-        job_id INTEGER NOT NULL PRIMARY KEY,
+        job_id TEXT NOT NULL PRIMARY KEY,
         title TEXT NOT NULL,
         company TEXT NOT NULL,
         description TEXT NOT NULL,
         location TEXT NOT NULL,
         remote TEXT NOT NULL,
         posted TEXT NOT NULL,
-        salary_min TEXT DEFAULT NULL
-        salary_max TEXT DEFAULT NULL
-        
+        salary_min INTEGER NOT NULL,
+        salary_max INTEGER NOT NULL,
+        salary_rate TEXT NOT NULL
         );''')
     except sqlite3.Error as db_error:
         print(f'A database error has occurred: {db_error}')
@@ -62,7 +63,7 @@ def create_table_job_links(cursor: sqlite3.Cursor) -> None:
        If a database error occurs an exception will be caught and printed."""
     try:
         cursor.execute('''CREATE TABLE IF NOT EXISTS job_links(
-            job_id INTEGER NOT NULL,
+            job_id TEXT NOT NULL,
             link_id INTEGER NOT NULL PRIMARY KEY ,
             link TEXT DEFAULT NULL,
             FOREIGN KEY(job_id) REFERENCES jobs(job_id)
@@ -81,7 +82,7 @@ def create_table_job_qualifications(cursor: sqlite3.Cursor) -> None:
            If a database error occurs an exception will be caught and printed."""
     try:
         cursor.execute('''CREATE TABLE IF NOT EXISTS job_qualifications(
-            job_id INTEGER NOT NULL,
+            job_id TEXT NOT NULL,
             qualification_id INTEGER NOT NULL PRIMARY KEY,
             qualification TEXT NOT NULL,
             FOREIGN KEY (job_id) REFERENCES jobs(job_id)
@@ -131,24 +132,28 @@ def insert_job_data_to_table(cursor: sqlite3.Cursor, job_entry: Dict[str, Any]) 
     """This function inserts the data collected from the job_entry dictionary into the table.
     Three find_job functions are called to find the values of remote, age, and salary.
     If a database error occurs an exception will be caught and printed. """
+    salary_min, salary_max = find_job_salary(job_entry)
     try:
         cursor.execute(
-            '''INSERT INTO jobs (title, company, description, location, remote, posted, salary)
-            VALUES(?, ?, ?, ?, ?, ?, ?)''',
+            '''INSERT OR IGNORE INTO jobs (job_id, title, company, description, location, remote, posted, salary_min, salary_max, salary_rate)
+            VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
             (
+                job_entry.get('job_id'),
                 job_entry.get('title', 'No Title Specified'),
                 job_entry.get('company_name', 'No Company Specified'),
                 job_entry.get('description', 'No Description Specified'),
                 job_entry.get('location', 'No Location Specified'),
                 find_remote_in_job(job_entry),
                 find_job_age(job_entry),
-                find_job_salary(job_entry)))
+                salary_min,
+                salary_max,
+                find_job_rate(salary_min)))
     except sqlite3.Error as db_error:
         print(f'A database error has occurred: {db_error}')
-    return cursor.lastrowid
+    return job_entry.get('job_id')
 
 
-def save_searched_data_to_database(cursor: sqlite3.Cursor, json_data: List[Dict[str, Any]], job_workbook) -> None:
+def save_searched_data_to_database(cursor: sqlite3.Cursor, json_data: List[Dict[str, Any]]) -> None:
     """ This function will loop through each job_entry. Find the links
     and qualifications of that job by calling find_job functions and insert the data
     to corresponding tables by calling the insert data to table functions.
@@ -162,19 +167,23 @@ def save_searched_data_to_database(cursor: sqlite3.Cursor, json_data: List[Dict[
         insert_link_to_table(cursor, job_id, job_links)
 
 
-def insert_worksheet_data_to_database(cursor: sqlite3.Cursor, job_name, company_name, location, posted_ago, salary):
+def insert_worksheet_data_to_database(cursor: sqlite3.Cursor, job_id, job_name, company_name, location, posted_ago,
+                                      salary_min, salary_max, salary_rate):
     try:
         cursor.execute(
-            '''INSERT INTO jobs (title, company, description, location, remote, posted, salary)
-            VALUES(?, ?, ?, ?, ?, ?, ?)''',
+            '''INSERT OR IGNORE INTO jobs (job_id, title, company, description, location, remote, posted, salary_min, salary_max, salary_rate)
+            VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
             (
+                job_id,
                 job_name,
                 company_name,
                 'No description Specified',
                 location,
                 'NA',
                 posted_ago,
-                salary))
+                salary_min,
+                salary_max,
+                salary_rate))
     except sqlite3.Error as db_error:
         print(f'A database error has occurred: {db_error}')
 
