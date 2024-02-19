@@ -44,7 +44,7 @@ def test_read_excel_sheet():
     """ This test verifies that reading the xlsx sheet work properly. Making
     sure there is at least 300 rows and exactly 10 columns in the sheet."""
     # get excel workbook
-    job_worksheet = load_job_workbook('../Sprint3Data.xlsx')
+    job_worksheet = load_job_workbook('Sprint3Data.xlsx')
     # get row count of Excel worksheet
     row_count = job_worksheet.max_row
     # assert it has at least 300 rows
@@ -59,7 +59,7 @@ def test_save_excel_data_to_database(mock_db_connection):
     """ This test verifies that saving the xlsx sheet works properly. Making
     sure that all the data in the workbook is added to our test database."""
     # get excel workbook
-    job_worksheet = load_job_workbook('../Sprint3Data.xlsx')
+    job_worksheet = load_job_workbook('Sprint3Data.xlsx')
     # create mock connection and cursor for mock database
     test_connection, test_cursor = mock_db_connection
     # add excel data to mock database
