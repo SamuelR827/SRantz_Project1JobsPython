@@ -100,7 +100,7 @@ def setup_db(cursor: sqlite3.Cursor) -> None:
     create_table_job_list(cursor)
 
 
-def insert_link_to_table(cursor: sqlite3.Cursor, job_id: int, link_dict: List[Dict[str, str]]) -> None:
+def insert_link_to_table(cursor: sqlite3.Cursor, job_id: str, link_dict: List[Dict[str, str]]) -> None:
     """ This function will insert each link from a specified job into the job_link table. The links
     are a list of dictionaries. It will loop through each dictionary and get the value of the key
     link which contains the actual link as text. The link is inserted into the table.
@@ -115,7 +115,7 @@ def insert_link_to_table(cursor: sqlite3.Cursor, job_id: int, link_dict: List[Di
             print(f'A database error has occurred: {db_error}')
 
 
-def insert_qualifications_to_table(cursor: sqlite3.Cursor, job_id: int, qualification_list: List[str]) -> None:
+def insert_qualifications_to_table(cursor: sqlite3.Cursor, job_id: str, qualification_list: List[str]) -> None:
     """ This function will insert each qualification from a specified job into the job_qualification table.
     The qualifications are a list of strings. The function loops through each string and insert
     that string into the table. Job_id is passed as a parameter to correspond each qualification
@@ -128,7 +128,9 @@ def insert_qualifications_to_table(cursor: sqlite3.Cursor, job_id: int, qualific
             print(f'A database error has occurred: {db_error}')
 
 
-def get_job_search_data(job_entry):
+def get_job_search_data(job_entry: Dict[str, Any]) -> tuple[Any | None, str, str, str, str, str, str, int, int, str]:
+    """ This function collects all the data for the specified job entry and returns data
+    as a tuple. """
     salary_min, salary_max = find_job_salary(job_entry)
     job_id = job_entry.get('job_id')
     job_title = job_entry.get('title', 'No Title Specified')
@@ -144,10 +146,11 @@ def get_job_search_data(job_entry):
     return job_data
 
 
-def insert_job_data_to_table(cursor: sqlite3.Cursor, job_entry: Dict[str, Any]) -> int:
+def insert_job_data_to_table(cursor: sqlite3.Cursor, job_entry: Dict[str, Any]) -> str:
     """This function inserts the data collected from the job_entry dictionary into the table.
     Three find_job functions are called to find the values of remote, age, and salary.
-    If a database error occurs an exception will be caught and printed. """
+    If a database error occurs an exception will be caught and printed. The data collected is formatted
+    as a tuple. """
     job_data = get_job_search_data(job_entry)
     try:
         statement = '''INSERT OR IGNORE INTO jobs (job_id, title, company, description, location, 

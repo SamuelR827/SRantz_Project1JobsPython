@@ -65,14 +65,19 @@ def find_job_age(job_entry: Dict[str, Any]) -> str:
         return posted_at.strip()
 
 
-def find_job_salary(job_entry: Dict[str, Any]):
+def find_job_salary(job_entry: Dict[str, Any]) -> Tuple[int, int]:
     """This code is taken from Professor Santore's GitHub solution from sprint 2.
     It was slightly modified to work with my program."""
+    # create empty benefits dictionary
     benefits_section = {}
+    # get job highlights
     job_highlights = job_entry.get('job_highlights')
+    # loop through each highlight dictionary, if it has a key named title and value
+    # benefits, the benefits section dictionary becomes the current dictionary
     for highlight in job_highlights:
-        if highlight.get('title') == "Benefits":
+        if highlight.get('title') == 'Benefits':
             benefits_section = highlight
+    # base values for min and max salary
     min_salary = 0
     max_salary = 0
     if benefits_section:  # if we got a dictionary with stuff in it
@@ -90,10 +95,13 @@ def find_job_salary(job_entry: Dict[str, Any]):
                 return int(numbers[0].replace(',', '')), int(numbers[1].replace(',', ''))
             else:
                 return min_salary, max_salary
+    # find description entry
     job_description = job_entry.get('description')
-    location = job_description.find("salary range")
+    # variable to keep track of pay range location job description
+    location = job_description.find('salary range')
+    # look for pay range in job description and update location if found
     if location < 0:
-        location = job_description.find("pay range")
+        location = job_description.find('pay range')
     if location < 0:
         return min_salary, max_salary
     numbers = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?(?!\d)', job_description[location:location + 50])
@@ -102,12 +110,18 @@ def find_job_salary(job_entry: Dict[str, Any]):
     return min_salary, max_salary
 
 
-def find_job_rate(min_salary):
-    salary_time_period = "N/A"
+def find_job_rate(min_salary: int) -> str:
+    """ This function gets the salary rate either hourly or yearly based on the
+    value of the minimum salary passed as a parameter. A min salary 900 or less
+    will result in hourly. """
+    # default to NA
+    salary_time_period = 'N/A'
+    # If between 0 and 900 it's an hourly salary
     if 0 < min_salary < 900:
         salary_time_period = 'Hourly'
+    # Otherwise, if greater than 0 it's a yearly salary
     elif min_salary > 0:
-        salary_time_period = "Yearly"
+        salary_time_period = 'Yearly'
     return salary_time_period
 
 

@@ -29,6 +29,8 @@ Requirements
     - windows: py -m ensurepip --upgrade
 - Install serpAPI in your project directory
     - pip install google-search-results
+- Install openpyxl in your project directory
+  - pip install openpyxl
 
 secrets.py
 
@@ -41,14 +43,16 @@ a search. However, they must have there secrets.py file configured properly in t
 The user must type in a job they would like to search for and press enter. Optionally it will ask the user
 to specify a location for that job. The user may type in a location and
 press enter or leave the location blank to skip. This program will then use serpAPI to perform a Google search
-of the user's entered job and generate json results into a database.
+of the user's entered job and generate json results into a database. The program will also
+fetch data from an Excel spreadsheet provided in the project. Some of this spreadsheet has missing
+data, so for that missing data in the database it will be set to N/A.
 
 The database is named job_results.db and in the project directory that was cloned.
 Three tables are generated jobs, job_links, job_qualifications.
 
 The jobs table contains columns for job_id as a primary key.
 The job title, the company name, the description of the job, the job
-location, if the job is remote or not, the job posted date, and the job salary.
+location, if the job is remote or not, the job posted date, and the job salary(min, max and rate).
 Most of these columns simply find a corresponding key/value pair in the job entry. Each
 job is its own row. Some job may have some values that are not specified in will show
 up in the database as not specified. All of this data is found from the job_entries
@@ -62,12 +66,8 @@ in the results.
 The posted column will look for key/value pair in the job entry's extensions
 called posted_at. If that key/value pair is found it will show the value for that key.
 
-The salary is found by first looking at the job entries benefits. Which is found as a dictionary
-in a list of job highlights. The benefits dictionary contains a key
-called items which has a value of a list of strings.
-The program will look through each of these strings searching for characters
-such as '$' or 'pay' or 'salary'. If matching character is found
-it will show the string containing that character.
+The salary (min and max) is found using Professor Santore's function to find the salary in his
+Sprint3Solution. The rate is found based on the min salary.
 
 There is two other tables for job_qualifications and job_links. Which are
 separate tables but use the job_id as foreign key to correspond to each database.
@@ -82,15 +82,9 @@ This is a list of dictionary's. Each dictionary has the key named link with the 
 of the link as string. Each job link will show as a separate row in the table with the own unique
 id. But it will also show the job_id it corresponds to.
 
-*** Please Note this program will delete any old entries in the database
-upon a rerun. If you would like to save your generated data in the database please
-either rename the database or move it out of the project directory, so it is not
-overwritten. ***
-
 By default, 5 pages of results will be generated (50 job entries).
 This can be changed in the main.py file with any python compatible text editor.
 
 I don't believe there is anything missing from the project. There are some columns such as
 salary which may have information in the description. But this project cannot handle every
 single odd case for where information is found in the json_data.
-The column for salary data is not consistent due to how the salary data is formatted differently for each job entry.
