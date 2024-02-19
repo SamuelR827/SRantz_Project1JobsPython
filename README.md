@@ -60,14 +60,14 @@ json entry and give the user information about the job_entry.
 
 The remote column will first look if the job location is set to 'Anywhere'
 it will show yes if that is the case. Otherwise, it will look for a key/value pair in
-job entry's extensions called work from home. It will show yes if that value is true
-in the results.
+job entry's extensions called work from home. It will show yes if the work from home key is found.
 
 The posted column will look for key/value pair in the job entry's extensions
 called posted_at. If that key/value pair is found it will show the value for that key.
 
 The salary (min and max) is found using Professor Santore's function to find the salary in his
-Sprint3Solution. The rate is found based on the min salary.
+Sprint3Solution. The rate is found based on the value of the minimum salary. Hourly if less than
+900, yearly if more than 900. N/A if 0.
 
 There is two other tables for job_qualifications and job_links. Which are
 separate tables but use the job_id as foreign key to correspond to each database.
@@ -85,6 +85,5 @@ id. But it will also show the job_id it corresponds to.
 By default, 5 pages of results will be generated (50 job entries).
 This can be changed in the main.py file with any python compatible text editor.
 
-I don't believe there is anything missing from the project. There are some columns such as
-salary which may have information in the description. But this project cannot handle every
+I don't believe there is anything missing from the project. But this project cannot handle every
 single odd case for where information is found in the json_data.
