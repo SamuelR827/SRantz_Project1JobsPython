@@ -65,35 +65,8 @@ def find_job_age(job_entry: Dict[str, Any]) -> str:
         return posted_at.strip()
 
 
-# def find_job_salary(job_entry: Dict[str, Any]) -> str:
-#     """ This function searches through a specified job's salary. It looks through the job_highlights
-#     key which it's value is a list of dictionary's. The function looks for a dictionary
-#     with the key/value pair. title:Benefits. If found it will look through the Benefits items which is a list
-#     of strings. It will look for any strings that contain the words, salary, pay or the $ and return this string."""
-#     # find job highlights list
-#     job_highlights: Optional[List[Dict[str, Any]]] = job_entry.get('job_highlights', None)
-#     # return no salary if there is no job highlights list
-#     if job_highlights is None:
-#         return 'No Salary Specified'
-#     # loop through each highlight in highlights list to find a dictionary with
-#     # the key value pair 'title: Benefits'
-#     for highlight in job_highlights:
-#         if highlight.get('title') == 'Benefits':
-#             # if found key/value pair match create a list of strings from benefits
-#             benefits = highlight.get('items', [])
-#             # loop through each benefit and check if each benefit contain keywords
-#             # if match return the benefit
-#             for benefit in benefits:
-#                 if 'salary:' in benefit.lower() or 'pay:' in benefit.lower() or '$' in benefit:
-#                     return benefit.strip()
-#             # return no salary specified if no benefit containing keywords fond
-#             return 'No Salary Specified'
-#         # return no salary specified if no benefits key/value pair found
-#     return 'No Salary Specified'
-
-
 def find_job_salary(job_entry: Dict[str, Any]):
-    """This code is taken from Professor Santore's github solution from sprint 2.
+    """This code is taken from Professor Santore's GitHub solution from sprint 2.
     It was slightly modified to work with my program."""
     benefits_section = {}
     job_highlights = job_entry.get('job_highlights')
@@ -130,7 +103,7 @@ def find_job_salary(job_entry: Dict[str, Any]):
 
 
 def find_job_rate(min_salary):
-    salary_time_period = "NA"
+    salary_time_period = "N/A"
     if 0 < min_salary < 900:
         salary_time_period = 'Hourly'
     elif min_salary > 0:

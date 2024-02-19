@@ -128,29 +128,35 @@ def insert_qualifications_to_table(cursor: sqlite3.Cursor, job_id: int, qualific
             print(f'A database error has occurred: {db_error}')
 
 
+def get_job_search_data(job_entry):
+    salary_min, salary_max = find_job_salary(job_entry)
+    job_id = job_entry.get('job_id')
+    job_title = job_entry.get('title', 'No Title Specified')
+    company_name = job_entry.get('company_name', 'No Company Specified')
+    job_description = job_entry.get('description', 'No Description Specified')
+    job_location = job_entry.get('location', 'No Location Specified')
+    job_remote = find_remote_in_job(job_entry)
+    job_age = find_job_age(job_entry)
+    salary_rate = find_job_rate(salary_min)
+    job_data = (
+        job_id, job_title, company_name, job_description, job_location, job_remote, job_age, salary_min, salary_max,
+        salary_rate)
+    return job_data
+
+
 def insert_job_data_to_table(cursor: sqlite3.Cursor, job_entry: Dict[str, Any]) -> int:
     """This function inserts the data collected from the job_entry dictionary into the table.
     Three find_job functions are called to find the values of remote, age, and salary.
     If a database error occurs an exception will be caught and printed. """
-    salary_min, salary_max = find_job_salary(job_entry)
+    job_data = get_job_search_data(job_entry)
     try:
-        cursor.execute(
-            '''INSERT OR IGNORE INTO jobs (job_id, title, company, description, location, remote, posted, salary_min, salary_max, salary_rate)
-            VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
-            (
-                job_entry.get('job_id'),
-                job_entry.get('title', 'No Title Specified'),
-                job_entry.get('company_name', 'No Company Specified'),
-                job_entry.get('description', 'No Description Specified'),
-                job_entry.get('location', 'No Location Specified'),
-                find_remote_in_job(job_entry),
-                find_job_age(job_entry),
-                salary_min,
-                salary_max,
-                find_job_rate(salary_min)))
+        statement = '''INSERT OR IGNORE INTO jobs (job_id, title, company, description, location, 
+        remote, posted, salary_min, salary_max, salary_rate)
+            VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);'''
+        cursor.execute(statement, job_data)
     except sqlite3.Error as db_error:
         print(f'A database error has occurred: {db_error}')
-    return job_entry.get('job_id')
+    return job_data[0]
 
 
 def save_searched_data_to_database(cursor: sqlite3.Cursor, json_data: List[Dict[str, Any]]) -> None:
@@ -167,23 +173,12 @@ def save_searched_data_to_database(cursor: sqlite3.Cursor, json_data: List[Dict[
         insert_link_to_table(cursor, job_id, job_links)
 
 
-def insert_worksheet_data_to_database(cursor: sqlite3.Cursor, job_id, job_name, company_name, location, posted_ago,
-                                      salary_min, salary_max, salary_rate):
+def insert_worksheet_data_to_database(cursor: sqlite3.Cursor, job_data):
     try:
-        cursor.execute(
-            '''INSERT OR IGNORE INTO jobs (job_id, title, company, description, location, remote, posted, salary_min, salary_max, salary_rate)
-            VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
-            (
-                job_id,
-                job_name,
-                company_name,
-                'No description Specified',
-                location,
-                'NA',
-                posted_ago,
-                salary_min,
-                salary_max,
-                salary_rate))
+        statement = '''INSERT OR IGNORE INTO jobs (job_id, title, company, description, location, 
+        remote, posted, salary_min, salary_max, salary_rate)
+            VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);'''
+        cursor.execute(statement, job_data)
     except sqlite3.Error as db_error:
         print(f'A database error has occurred: {db_error}')
 

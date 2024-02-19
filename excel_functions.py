@@ -20,5 +20,8 @@ def add_excel_job_data(cursor, job_worksheet):
         salary_max = job_worksheet.cell(row=row, column=7).value
         salary_rate = job_worksheet.cell(row=row, column=9).value
         job_name = job_worksheet.cell(row=row, column=10).value
-        insert_worksheet_data_to_database(cursor, job_id, job_name, company_name, location, posted_ago, salary_min,
-                                          salary_max, salary_rate)
+        job_remote = 'N/A'
+        job_description = 'N/A'
+        job_worksheet_data = (job_id, job_name, company_name, job_description, location,
+                              job_remote, posted_ago, salary_min, salary_max, salary_rate)
+        insert_worksheet_data_to_database(cursor, job_worksheet_data)

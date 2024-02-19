@@ -14,7 +14,7 @@ from excel_functions import load_job_workbook
 from excel_functions import add_excel_job_data
 
 
-def perform_search(cursor: sqlite3.Cursor, num_pages: int, job_workbook) -> None:
+def perform_search(cursor: sqlite3.Cursor, num_pages: int) -> None:
     """ This function performs multiple searches based on the number of pages passed as a parameter
     and saves the data to a database. The function keeps track of a page offset variable to print
     the next page of the Google results. This function uses a loop to execute multiple
@@ -63,7 +63,7 @@ def main() -> None:
     # call the database function
     setup_db(cursor)
     # call perform_search function with desired page count
-    perform_search(cursor, num_pages, job_workbook)
+    perform_search(cursor, num_pages)
     add_excel_job_data(cursor, job_workbook)
     # close the database by calling the close database function
     db_close(connection)
