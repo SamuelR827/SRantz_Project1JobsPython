@@ -88,12 +88,12 @@ def find_job_salary(job_entry: Dict[str, Any]) -> Tuple[int, int]:
                 # -strings-in-python
                 numbers = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?(?!\d)', benefit_item)
                 if numbers:  # if we found salary data, return it
-                    return int(numbers[0].replace(',', '')), int(numbers[1].replace(',', ''))
+                    return int(float((numbers[0].replace(',', '')))), int(float((numbers[1].replace(',', ''))))
             numbers = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?(?!\d)', benefit_item)
             if len(numbers) == 2 and int(float(
                     numbers[0].replace(',', ''))) > 30:  # some jobs just put the numbers in one item
                 # and the description in another
-                return int(numbers[0].replace(',', '')), int(numbers[1].replace(',', ''))
+                return int(float((numbers[0].replace(',', '')))), int(float((numbers[1].replace(',', ''))))
             else:
                 return min_salary, max_salary
     # find description entry

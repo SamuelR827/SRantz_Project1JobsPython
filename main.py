@@ -56,9 +56,9 @@ def main() -> None:
     and all the data from the Excel sheet is added to the database. """
     # hardcoded variable for desired amount of pages for now
     # you may change this if desired
-    num_pages = 1
+    num_pages = 5
     # call load_job_workbook function to initialize workbook
-    job_workbook = load_job_workbook()
+    job_workbook = load_job_workbook('Sprint3Data.xlsx')
     # create database connection by calling the connection function
     connection, cursor = create_db_connection('job_results.db')
     # call the database function
