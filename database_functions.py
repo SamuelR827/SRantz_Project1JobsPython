@@ -153,7 +153,7 @@ def insert_job_data_to_table(cursor: sqlite3.Cursor, job_entry: Dict[str, Any]) 
     as a tuple. """
     job_data = get_job_search_data(job_entry)
     try:
-        statement = '''INSERT OR IGNORE INTO jobs (job_id, title, company, description, location, 
+        statement = '''INSERT OR IGNORE INTO jobs (job_id, title, company, description, location,
         remote, posted, salary_min, salary_max, salary_rate)
             VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);'''
         cursor.execute(statement, job_data)
@@ -178,7 +178,7 @@ def save_searched_data_to_database(cursor: sqlite3.Cursor, json_data: List[Dict[
 
 def insert_worksheet_data_to_database(cursor: sqlite3.Cursor, job_data):
     try:
-        statement = '''INSERT OR IGNORE INTO jobs (job_id, title, company, description, location, 
+        statement = '''INSERT OR IGNORE INTO jobs (job_id, title, company, description, location,
         remote, posted, salary_min, salary_max, salary_rate)
             VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);'''
         cursor.execute(statement, job_data)

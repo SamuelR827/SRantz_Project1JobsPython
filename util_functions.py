@@ -65,6 +65,7 @@ def find_job_age(job_entry: Dict[str, Any]) -> str:
         return posted_at.strip()
 
 
+# flake8: noqa: C901
 def find_job_salary(job_entry: Dict[str, Any]) -> Tuple[int, int]:
     """This code is taken from Professor Santore's GitHub solution from sprint 2.
     It was slightly modified to work with my program."""
