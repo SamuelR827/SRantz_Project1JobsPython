@@ -93,7 +93,8 @@ def test_save_data_to_database(mock_db_connection: Generator[tuple[Connection, C
     test_connection, test_cursor = mock_db_connection
     # sample data in json format
     test_json_job_data = [
-        {"title": "Some Job Title",
+        {
+         "title": "Some Job Title",
          "company_name": "Some Company Name",
          "location": "Some Location",
          "via": "Some Via",

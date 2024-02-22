@@ -1,28 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="test_results" uuid="7a15c1e4-d7fb-4234-8406-560261060bac">
+    <data-source source="LOCAL" name="job_results" uuid="f59390b3-1f59-4cb2-ac48-73f4c421defa">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:C:\Users\sdrag\OneDrive - Bridgewater State University\Coding\PyCharm\Senior Design and Development\SRantz_Project1Jobs\tests\test_results.db</jdbc-url>
+      <jdbc-url>jdbc:sqlite:C:\Users\sdrag\OneDrive - Bridgewater State University\Coding\PyCharm\Senior Design and Development\SRantz_Project1JobsPython\job_results.db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
       <libraries>
         <library>
           <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.43.0/org/xerial/sqlite-jdbc/3.43.0.0/sqlite-jdbc-3.43.0.0.jar</url>
         </library>
-        <library>
-          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.39.2/sqlite-jdbc-3.39.2.jar</url>
-        </library>
-      </libraries>
-    </data-source>
-    <data-source source="LOCAL" name="job_results" uuid="68314775-0322-4780-a495-89ceaa866e23">
-      <driver-ref>sqlite.xerial</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:C:\Users\sdrag\OneDrive - Bridgewater State University\Coding\PyCharm\Senior Design and Development\SRantz_Project1Jobs\job_results.db</jdbc-url>
-      <working-dir>$ProjectFileDir$</working-dir>
-      <libraries>
         <library>
           <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.43.0/org/xerial/sqlite-jdbc/3.43.0.0/sqlite-jdbc-3.43.0.0.jar</url>
         </library>

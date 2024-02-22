@@ -65,50 +65,63 @@ def find_job_age(job_entry: Dict[str, Any]) -> str:
         return posted_at.strip()
 
 
-# flake8: noqa: C901
 def find_job_salary(job_entry: Dict[str, Any]) -> Tuple[int, int]:
-    """This code is taken from Professor Santore's GitHub solution from sprint 2.
-    It was slightly modified to work with my program."""
-    # create empty benefits dictionary
-    benefits_section = {}
+    """Find the job salary from the job entry. This code uses the same logic from Professor
+    Santore's Sprint 2 Solution to find the job salary. Refactored and split into
+    four different functions. The logic and functionality remains the same."""
+    # get benefits section by calling function
+    benefits_section = get_job_benefit_section(job_entry)
+    # attempt to find min and max salary from benefits section
+    min_salary, max_salary = find_salary_in_benefits_section(benefits_section)
+    # if function call for benefits returned nothing (0,0) find salary in job description
+    if min_salary == 0 and max_salary == 0:
+        min_salary, max_salary = find_salary_in_job_description(job_entry)
+    return min_salary, max_salary
+
+
+def get_job_benefit_section(job_entry: Dict[str, Any]) -> Dict[str, Any]:
+    """Extract the benefits section from the job entry."""
     # get job highlights
-    job_highlights = job_entry.get('job_highlights')
+    job_highlights = job_entry.get('job_highlights', [])
     # loop through each highlight dictionary, if it has a key named title and value
     # benefits, the benefits section dictionary becomes the current dictionary
     for highlight in job_highlights:
         if highlight.get('title') == 'Benefits':
-            benefits_section = highlight
+            return highlight
+    # return empty dictionary if not found
+    return {}
+
+
+def find_salary_in_benefits_section(benefits_section: Dict[str, Any]) -> Tuple[int, int]:
+    """Extract salary from the benefits section."""
     # base values for min and max salary
-    min_salary = 0
-    max_salary = 0
-    if benefits_section:  # if we got a dictionary with stuff in it
-        for benefit_item in benefits_section['items']:
-            if 'range' in benefit_item.lower():
-                # from https://stackoverflow.com/questions/63714217/how-can-i-extract-numbers-containing-commas-from
-                # -strings-in-python
-                numbers = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?(?!\d)', benefit_item)
-                if numbers:  # if we found salary data, return it
-                    return int(float((numbers[0].replace(',', '')))), int(float((numbers[1].replace(',', ''))))
+    min_salary = max_salary = 0
+    for benefit_item in benefits_section.get('items', []):
+        if 'range' in benefit_item.lower():
+            # from https://stackoverflow.com/questions/63714217/how-can-i-extract-numbers-containing-commas-from
+            # -strings-in-python
             numbers = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?(?!\d)', benefit_item)
-            if len(numbers) == 2 and int(float(
-                    numbers[0].replace(',', ''))) > 30:  # some jobs just put the numbers in one item
-                # and the description in another
-                return int(float((numbers[0].replace(',', '')))), int(float((numbers[1].replace(',', ''))))
-            else:
-                return min_salary, max_salary
+            if numbers:  # if we found salary data, return it
+                min_salary = int(float(numbers[0].replace(',', '')))
+                max_salary = int(float(numbers[1].replace(',', '')))
+                break
+    return min_salary, max_salary
+
+
+def find_salary_in_job_description(job_entry: Dict[str, Any]) -> Tuple[int, int]:
+    """Extract salary from the job description."""
     # find description entry
-    job_description = job_entry.get('description')
+    job_description = job_entry.get('description', '')
     # variable to keep track of pay range location job description
     location = job_description.find('salary range')
     # look for pay range in job description and update location if found
     if location < 0:
         location = job_description.find('pay range')
     if location < 0:
-        return min_salary, max_salary
-    numbers = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?(?!\d)', job_description[location:location + 50])
-    if numbers:
-        return int(numbers[0].replace(',', '')), int(numbers[1].replace(',', ''))
-    return min_salary, max_salary
+        numbers = re.findall(r'\b\d{1,3}(?:,\d{3})*(?:\.\d+)?(?!\d)', job_description[location:location + 50])
+        if numbers:
+            return int(numbers[0].replace(',', '')), int(numbers[1].replace(',', ''))
+    return 0, 0
 
 
 def find_job_rate(min_salary: int) -> str:
@@ -120,6 +133,9 @@ def find_job_rate(min_salary: int) -> str:
     # If between 0 and 900 it's an hourly salary
     if 0 < min_salary < 900:
         salary_time_period = 'Hourly'
+    # Otherwise, if less than 9000 it's a monthly salary
+    elif 900 < min_salary < 9000:
+        salary_time_period = 'Monthly'
     # Otherwise, if greater than 0 it's a yearly salary
     elif min_salary > 0:
         salary_time_period = 'Yearly'
