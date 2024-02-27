@@ -186,6 +186,12 @@ def insert_worksheet_data_to_database(cursor: sqlite3.Cursor, job_data):
         print(f'A database error has occurred: {db_error}')
 
 
+def get_all_job_data_from_table(cursor: sqlite3.Cursor):
+    cursor.execute('''SELECT * FROM jobs''')
+    job_data = cursor.fetchall()
+    return job_data
+
+
 def db_close(db_connection: sqlite3.Connection) -> None:
     """ This function will commit and close the database.
     If a database error occurs an exception will be caught and printed

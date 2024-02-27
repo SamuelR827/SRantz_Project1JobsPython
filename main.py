@@ -3,6 +3,8 @@ module for executing the program. """
 import sqlite3
 import sys
 
+from PySide6.QtQuick import QQuickWindow, QSGRendererInterface
+from gui.gui_functions import display_job_list_data
 from database_functions import create_db_connection
 from database_functions import db_close
 from database_functions import save_searched_data_to_database
@@ -54,9 +56,10 @@ def main() -> None:
     and calls the perform_search function to generate that data with the created database as well as
     hard-coded number of pages to generate. A workbook is created for the job data in the Excel sheet
     and all the data from the Excel sheet is added to the database. """
+    QQuickWindow.setGraphicsApi(QSGRendererInterface.GraphicsApi.Software)
     # hardcoded variable for desired amount of pages for now
     # you may change this if desired
-    num_pages = 5
+    num_pages = 1
     # call load_job_workbook function to initialize workbook
     job_workbook = load_job_workbook('Sprint3Data.xlsx')
     # create database connection by calling the connection function
@@ -68,6 +71,7 @@ def main() -> None:
     # call add_excel_job_data function to add excel data to database
     add_excel_job_data(cursor, job_workbook)
     # close the database by calling the close database function
+    display_job_list_data(cursor)
     db_close(connection)
 
 
