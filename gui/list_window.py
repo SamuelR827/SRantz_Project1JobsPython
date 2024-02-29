@@ -1,33 +1,41 @@
-from PySide6.QtWidgets import QWidget, QPushButton, QListWidget, QApplication, QListWidgetItem, QMessageBox
+from PySide6.QtWidgets import QWidget, QPushButton, QListWidget, QApplication, QListWidgetItem, QMessageBox, QLabel, \
+    QLayout, QVBoxLayout
 
+import gui.detail_window as detail_window
 
 class JobsListWindow(QWidget):
     def __init__(self, job_data):
         super().__init__()
+        self.data_window = None
         self.data = job_data
         self.list_control = None
         self.setup_window()
 
     def setup_window(self):
         self.setWindowTitle("GUI Demo for Capstone")
+        layout = QVBoxLayout(self)
+        title_label = QLabel("Job List", self)
+        layout.addWidget(title_label)
         display_list = QListWidget(self)
         self.list_control = display_list
         self.put_data_in_list(self.data)
         display_list.resize(400, 350)
         display_list.currentItemChanged.connect(self.list_job_selected)
+        layout.addWidget(display_list)
         self.setGeometry(300, 100, 400, 500)
-        quit_button = QPushButton("Quit Now", self)
-        quit_button.clicked.connect(QApplication.instance().quit)
-        quit_button.resize(quit_button.sizeHint())
-        quit_button.move(300, 400)
         map_button = QPushButton("Job Map", self)
         map_button.move(300, 400)
         map_button.clicked.connect(self.show_map_window)
+        layout.addWidget(map_button)
+        quit_button = QPushButton("Quit Now", self)
+        quit_button.clicked.connect(QApplication.instance().quit)
+        quit_button.resize(quit_button.sizeHint())
+        layout.addWidget(quit_button)
         self.show()
 
     def put_data_in_list(self, job_data: list[dict]):
         for job_entry in job_data:
-            display_text = f'{job_entry["job_title"]}'
+            display_text = f'{job_entry["job_title"]}, {job_entry["company_name"]}'
             list_item = QListWidgetItem(display_text, listview=self.list_control)
 
     # TODO actual implementation of job map window
@@ -37,11 +45,16 @@ class JobsListWindow(QWidget):
         message_box.setWindowTitle("Map Window")
         message_box.show()
 
-# TODO actual implementation of job list window
+    def find_full_job_record(self, job_title: str):
+        for job_record in self.data:
+            if job_record["job_title"] == job_title:
+                return job_record
+
     def list_job_selected(self, current: QListWidgetItem, previous: QListWidgetItem):
-        message_box = QMessageBox(self)
-        message_box.setText("You just selected a job - imagine database work here")
-        message_box.setWindowTitle("Detail Window")
-        message_box.show()
+        job_title = current.data(0).split(',')[0]
+        full_record = self.find_full_job_record(job_title)
+        print(full_record)
+        self.data_window = detail_window.JobDetailWindow(full_record)
+        self.data_window.show()
 
 

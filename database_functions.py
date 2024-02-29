@@ -192,6 +192,18 @@ def get_all_job_data_from_table(cursor: sqlite3.Cursor):
     return job_data
 
 
+def get_all_job_links_from_table(cursor: sqlite3.Cursor, job_id):
+    cursor.execute('''SELECT * FROM job_links WHERE job_id = ?''', (job_id,))
+    job_data = cursor.fetchall()
+    return job_data
+
+
+def get_all_job_qualifications_from_table(cursor: sqlite3.Cursor, job_id):
+    cursor.execute('''SELECT * FROM job_qualifications WHERE job_id = ?''', (job_id,))
+    job_data = cursor.fetchall()
+    return job_data
+
+
 def db_close(db_connection: sqlite3.Connection) -> None:
     """ This function will commit and close the database.
     If a database error occurs an exception will be caught and printed
