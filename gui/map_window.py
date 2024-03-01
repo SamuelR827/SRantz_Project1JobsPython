@@ -5,13 +5,13 @@ from PySide6.QtWebEngineWidgets import QWebEngineView
 from geopy.geocoders import Nominatim
 from folium.plugins import MarkerCluster
 
+
 class JobMapWindow(QWidget):
     def __init__(self, job_data):
         super().__init__()
         self.data = job_data
         self.map = self.build_map()
         self.setup_window()
-
 
     def setup_window(self):
         self.layout = QVBoxLayout(self)
@@ -22,7 +22,6 @@ class JobMapWindow(QWidget):
         self.setLayout(self.layout)
         self.resize(800, 800)
         self.show()
-
 
     def build_map(self):
         address = 'Brockton, MA'
@@ -44,5 +43,3 @@ class JobMapWindow(QWidget):
             ).add_to(map_data_markers)
         job_map_menu.save(in_memory_file, close_file=False)
         return in_memory_file
-
-
