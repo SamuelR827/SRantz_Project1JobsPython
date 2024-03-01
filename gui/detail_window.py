@@ -9,7 +9,7 @@ class JobDetailWindow(QWidget):
 
     def setup_window(self):
         self.setWindowTitle('Selected Job Detail Window')
-        self.setGeometry(750, 100, 1000, 500)
+        self.setGeometry(500, 100, 1000, 500)
 
         self.create_field("Job ID: ", self.data['job_id'], 50)
         self.create_field("Job Title: ", self.data['job_title'], 75)
@@ -42,10 +42,11 @@ class JobDetailWindow(QWidget):
                 self.create_field(f"Job Link {link_count}: ", self.data['job_links'][link_count - 1], y_pos)
                 link_count += 1
                 y_pos += 25
-                return y_pos
+            return y_pos
 
     def create_field_qualifications(self, y_pos):
         job_qualifications = self.data['job_qualifications']
+        print(job_qualifications)
         if job_qualifications != 'N/A':
             qualification_count = 1
             for qualification in job_qualifications:
@@ -53,4 +54,4 @@ class JobDetailWindow(QWidget):
                                   self.data['job_qualifications'][qualification_count - 1], y_pos)
                 qualification_count += 1
                 y_pos += 25
-                return y_pos
+            return y_pos

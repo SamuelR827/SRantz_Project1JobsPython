@@ -1,7 +1,10 @@
-from PySide6.QtWidgets import QWidget, QPushButton, QListWidget, QApplication, QListWidgetItem, QMessageBox, QLabel, \
-    QLayout, QVBoxLayout
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import (QWidget, QPushButton, QListWidget, QApplication, QListWidgetItem, QMessageBox, QLabel,
+                               QVBoxLayout)
 
 import gui.detail_window as detail_window
+import gui.map_window as map_window
+
 
 class JobsListWindow(QWidget):
     def __init__(self, job_data):
@@ -22,7 +25,7 @@ class JobsListWindow(QWidget):
         display_list.resize(400, 350)
         display_list.currentItemChanged.connect(self.list_job_selected)
         layout.addWidget(display_list)
-        self.setGeometry(300, 100, 400, 500)
+        self.setGeometry(200, 100, 300, 500)
         map_button = QPushButton("Job Map", self)
         map_button.move(300, 400)
         map_button.clicked.connect(self.show_map_window)
@@ -37,24 +40,21 @@ class JobsListWindow(QWidget):
         for job_entry in job_data:
             display_text = f'{job_entry["job_title"]}, {job_entry["company_name"]}'
             list_item = QListWidgetItem(display_text, listview=self.list_control)
+            list_item.setData(Qt.UserRole, job_entry["job_id"])  # Set job ID as user data
 
     # TODO actual implementation of job map window
     def show_map_window(self):
-        message_box = QMessageBox(self)
-        message_box.setText("You just pushed the button - imagine database work here")
-        message_box.setWindowTitle("Map Window")
-        message_box.show()
+        self.map_window = map_window.JobMapWindow(self.data)
+        self.map_window.show()
 
-    def find_full_job_record(self, job_title: str):
+    def find_full_job_record(self, job_id):
         for job_record in self.data:
-            if job_record["job_title"] == job_title:
+            if job_record["job_id"] == job_id:
                 return job_record
 
     def list_job_selected(self, current: QListWidgetItem, previous: QListWidgetItem):
-        job_title = current.data(0).split(',')[0]
-        full_record = self.find_full_job_record(job_title)
+        job_id = current.data(Qt.UserRole)
+        full_record = self.find_full_job_record(job_id)
         print(full_record)
         self.data_window = detail_window.JobDetailWindow(full_record)
         self.data_window.show()
-
-
