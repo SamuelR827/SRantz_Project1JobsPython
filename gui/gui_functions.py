@@ -1,4 +1,3 @@
-# pylint: disable=unused-variable
 import sys
 
 from database_functions import get_all_job_data_from_table
@@ -11,7 +10,7 @@ import gui.list_window
 def display_job_list_data(cursor):
     qt_app = PySide6.QtWidgets.QApplication(sys.argv)  # sys.argv is the list of command line arguments
     job_data = get_job_data_for_gui(cursor)
-    job_list_window = gui.list_window.JobsListWindow(job_data)
+    _ = gui.list_window.JobsListWindow(job_data)
     sys.exit(qt_app.exec())
 
 
