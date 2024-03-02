@@ -94,47 +94,47 @@ def test_save_data_to_database(mock_db_connection: Generator[tuple[Connection, C
     # sample data in json format
     test_json_job_data = [
         {
-         "title": "Some Job Title",
-         "company_name": "Some Company Name",
-         "location": "Some Location",
-         "via": "Some Via",
-         "description": "Some Description",
-         "job_highlights":
-             [
-                 {
-                     "title": "Qualifications",
-                     "items": [
-                         "Qualification 1", "Qualification 2"
-                     ]
-                 },
-                 {
-                     "title": "Responsibilities",
-                     "items": [
-                         "Responsibility 1", "Responsibility 2"
-                     ]
-                 },
-                 {
-                     "title": "Benefits",
-                     "items": [
-                         "Salary $0 - 100"
-                     ]
-                 }
-             ],
-         "related_links": [
-             {
-                 "link": "https://example.com",
-                 "text": "Link Title"
-             }],
-         "thumbnail": "https://examplethumb.com",
-         "extensions":
-             [
-                 "some time ago",
-                 "some information"
-             ],
-         "detected_extensions": {
-             "posted_at": "some time ago"},
-         "job_id": "some job id"
-         },
+            "title": "Some Job Title",
+            "company_name": "Some Company Name",
+            "location": "Some Location",
+            "via": "Some Via",
+            "description": "Some Description",
+            "job_highlights":
+                [
+                    {
+                        "title": "Qualifications",
+                        "items": [
+                            "Qualification 1", "Qualification 2"
+                        ]
+                    },
+                    {
+                        "title": "Responsibilities",
+                        "items": [
+                            "Responsibility 1", "Responsibility 2"
+                        ]
+                    },
+                    {
+                        "title": "Benefits",
+                        "items": [
+                            "Salary $0 - 100"
+                        ]
+                    }
+                ],
+            "related_links": [
+                {
+                    "link": "https://example.com",
+                    "text": "Link Title"
+                }],
+            "thumbnail": "https://examplethumb.com",
+            "extensions":
+                [
+                    "some time ago",
+                    "some information"
+                ],
+            "detected_extensions": {
+                "posted_at": "some time ago"},
+            "job_id": "some job id"
+        },
     ]
     # call function to test saving data
     save_searched_data_to_database(test_cursor, test_json_job_data)
