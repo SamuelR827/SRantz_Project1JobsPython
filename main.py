@@ -25,7 +25,7 @@ def perform_search(cursor: sqlite3.Cursor, num_pages: int) -> None:
     secret_api_key = secrets_handling()
     # if secret_api_key returns no secrets and return to prevent rest of the function from running
     if secret_api_key == 'No secrets':
-        sys.exit('Oh nos! An error occurred: Missing API key. Did you create a secrets.py file?')
+        sys.exit('Oh nos! An error occurred: Missing API key. Did you create a secrets_file.py file?')
     # page offset variable to keep track of the current page, starts at 0 for page 1 in serpapi results
     page_offset = 0
     # try except block to handle any exceptions likely caused by user-input error.
@@ -45,7 +45,7 @@ def perform_search(cursor: sqlite3.Cursor, num_pages: int) -> None:
             # increment page offset by 10, which means one page
             page_offset += 10
         # finish print message for the user
-        print("Finished! Please check your database in the project directory...")
+        print("Finished! A GUI will now open...")
     # catch any exceptions and print error message
     except Exception as exception:
         sys.exit(f'Oh nos! An error occurred: {exception}')

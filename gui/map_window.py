@@ -9,6 +9,8 @@ from folium.plugins import MarkerCluster
 class JobMapWindow(QWidget):
     def __init__(self, job_data):
         super().__init__()
+        self.layout = None
+        self.webview = None
         self.data = job_data
         self.map = self.build_map()
         self.setup_window()
@@ -33,7 +35,7 @@ class JobMapWindow(QWidget):
         in_memory_file = io.BytesIO()
         map_data_markers = MarkerCluster().add_to(job_map_menu)
         for entry in self.data:
-            job_name = entry["job_name"]
+            job_name = entry["job_title"]
             company_name = entry["company_name"]
             job_location = entry["job_location"]
             job_loc_geocoded = geolocator.geocode(job_location)  # this might need try/catch for small towns

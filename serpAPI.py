@@ -9,11 +9,11 @@ creating a search query, and running the search. """
 
 def secrets_handling() -> str:
     """ This function imports secrets but with error handling
-    if the user hasn't created a secrets.py file."""
+    if the user hasn't created a secrets_file.py file."""
     try:
         # try to import secrets
-        import secrets
-        return secrets.api_key
+        import secrets_file
+        return secrets_file.api_key
     except AttributeError:
         # if import error exception occurs print error message and return no secrets
         return 'No secrets'

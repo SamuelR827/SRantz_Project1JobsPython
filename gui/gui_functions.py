@@ -1,3 +1,4 @@
+# pylint: disable=unused-variable
 import sys
 
 from database_functions import get_all_job_data_from_table

@@ -1,57 +1,71 @@
-from PySide6.QtWidgets import QWidget, QLabel, QLineEdit
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QWidget, QLabel, QLineEdit, QTextEdit, QScrollArea, QVBoxLayout
 
 
 class JobDetailWindow(QWidget):
     def __init__(self, job_data):
         super().__init__()
+        self.description_field = None
         self.data = job_data
         self.setup_window()
 
     def setup_window(self):
-        self.setWindowTitle('Selected Job Detail Window')
-        self.setGeometry(500, 100, 1000, 500)
+        self.setWindowTitle(f"{self.data['job_title']} Detail Window")
 
-        self.create_field("Job ID: ", self.data['job_id'], 50)
-        self.create_field("Job Title: ", self.data['job_title'], 75)
-        self.create_field("Company Name: ", self.data['company_name'], 100)
-        self.create_field("Job Location: ", self.data['job_location'], 125)
-        self.create_field("Job Remote: ", self.data['job_remote'], 150)
-        self.create_field("Job Posted Date: ", self.data['job_posted'], 175)
-        self.create_field("Salary Min: ", str(self.data['salary_min']), 200)
-        self.create_field("Salary Max: ", str(self.data['salary_max']), 225)
-        self.create_field("Salary Rate: ", self.data['salary_rate'], 250)
-        y_position = 275
-        y_position = self.create_field_links(y_position)
-        y_position = self.create_field_qualifications(y_position)
+        # Create scroll area for job fields
+        scroll_area = QScrollArea(self)
+        scroll_area.setGeometry(50, 50, 500, 300)
+        scroll_area.setWidgetResizable(True)
+        scroll_content = QWidget()
+        scroll_area.setWidget(scroll_content)
 
-    def create_field(self, label_text, data, y_pos):
-        label = QLabel(self)
-        label.setText(label_text)
-        label.move(50, y_pos)
+        # Create layout for job fields
+        field_layout = QVBoxLayout(scroll_content)
+
+        # Display job fields
+        self.create_field("Job ID: ", self.data['job_id'], field_layout)
+        self.create_field("Job Title: ", self.data['job_title'], field_layout)
+        self.create_field("Company Name: ", self.data['company_name'], field_layout)
+        self.create_field("Job Location: ", self.data['job_location'].strip(), field_layout)
+        self.create_field("Job Remote: ", self.data['job_remote'], field_layout)
+        self.create_field("Job Posted Date: ", self.data['job_posted'], field_layout)
+        self.create_field("Salary Min: ", str(self.data['salary_min']), field_layout)
+        self.create_field("Salary Max: ", str(self.data['salary_max']), field_layout)
+        self.create_field("Salary Rate: ", self.data['salary_rate'], field_layout)
+        self.create_field_links(field_layout)
+        self.create_field_qualifications(field_layout)
+
+        # Create scroll area for job description
+        if self.data['job_description'] != 'N/A':
+            description_label = QLabel("Job Description:", self)
+            description_label.setAlignment(Qt.AlignTop)
+            field_layout.addWidget(description_label)
+
+            self.description_field = QTextEdit(self.data['job_description'], self)
+            self.description_field.setReadOnly(True)
+            field_layout.addWidget(self.description_field)
+
+    def create_field(self, label_text, data, layout):
+        label = QLabel(label_text, self)
+        layout.addWidget(label)
 
         line_edit = QLineEdit(str(data), self)
-        line_edit.move(200, y_pos)
-        line_edit.setReadOnly(True)  # Make the field read-only
-        line_edit.setFixedWidth(300)  # Set the width of the field
+        line_edit.setReadOnly(True)
+        layout.addWidget(line_edit)
 
-    def create_field_links(self, y_pos):
+    def create_field_links(self, layout):
         job_links = self.data['job_links']
         if job_links != 'N/A':
-            link_count = 1
-            for link in job_links:
-                self.create_field(f"Job Link {link_count}: ", self.data['job_links'][link_count - 1], y_pos)
-                link_count += 1
-                y_pos += 25
-            return y_pos
+            if job_links != 'No Related Links Specified':
+                link_count = 1
+                for _ in job_links:
+                    self.create_field(f"Job Link {link_count}: ", self.data['job_links'][link_count - 1], layout)
+                    link_count += 1
 
-    def create_field_qualifications(self, y_pos):
+    def create_field_qualifications(self, layout):
         job_qualifications = self.data['job_qualifications']
-        print(job_qualifications)
-        if job_qualifications != 'N/A':
+        if isinstance(job_qualifications, list) and 'No Qualifications Specified' not in job_qualifications:
             qualification_count = 1
             for qualification in job_qualifications:
-                self.create_field(f"Job Qualification {qualification_count}: ",
-                                  self.data['job_qualifications'][qualification_count - 1], y_pos)
+                self.create_field(f"Job Qualification {qualification_count}: ", qualification, layout)
                 qualification_count += 1
-                y_pos += 25
-            return y_pos
