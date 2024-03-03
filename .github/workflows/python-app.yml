@@ -40,8 +40,9 @@ jobs:
         API_KEY: ${{ secrets.SERPAPI_KEY }}
       run: |
         echo 'api_key = "'$API_KEY'"' >> secrets_file.py
+    - name: Install libegl1
+      run: sudo apt-get update && sudo apt-get install -y libegl1
     - name: Test with pytest
       run: |
         pip install pytest
         pytest
-
