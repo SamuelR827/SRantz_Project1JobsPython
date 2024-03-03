@@ -2,7 +2,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (QWidget, QPushButton, QListWidget, QApplication, QListWidgetItem, QLabel,
                                QVBoxLayout, QLineEdit, QCheckBox)
 
-from gui import detail_window as detail_window
+import detail_window as detail_window
 import map_window as map_window
 
 
