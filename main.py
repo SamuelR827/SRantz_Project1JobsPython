@@ -4,7 +4,7 @@ import sqlite3
 import sys
 
 from PySide6.QtQuick import QQuickWindow, QSGRendererInterface
-from gui_functions import display_job_list_data
+from gui.gui_functions import display_job_list_data
 from database_functions import create_db_connection
 from database_functions import db_close
 from database_functions import save_searched_data_to_database
