@@ -6,7 +6,7 @@ from typing import Generator, Any
 
 import pytest
 
-import gui.list_window as list_window
+from list_window import JobsListWindow
 from database_functions import create_db_connection
 from database_functions import create_table_job_links
 from database_functions import create_table_job_list
@@ -206,23 +206,23 @@ def setup_test_filter_data():
 
 def test_filter_jobs_by_keyword():
     data_to_filter = setup_test_filter_data()
-    filtered_jobs = list_window.JobsListWindow.filter_jobs_by_keyword(data_to_filter, 'Python')
+    filtered_jobs = JobsListWindow.filter_jobs_by_keyword(data_to_filter, 'Python')
     assert len(filtered_jobs) == 2  # Expecting 2 jobs matching keyword 'Engineer'
 
 
 def test_filter_jobs_by_location():
     data_to_filter = setup_test_filter_data()
-    filtered_jobs = list_window.JobsListWindow.filter_jobs_by_location(data_to_filter, 'Boston')
+    filtered_jobs = JobsListWindow.filter_jobs_by_location(data_to_filter, 'Boston')
     assert len(filtered_jobs) == 1  # Expecting 1 job in Boston
 
 
 def test_filter_remote_jobs():
     data_to_filter = setup_test_filter_data()
-    filtered_jobs = list_window.JobsListWindow.filter_remote_jobs(data_to_filter)
+    filtered_jobs = JobsListWindow.filter_remote_jobs(data_to_filter)
     assert len(filtered_jobs) == 1  # Expecting 1 remote job
 
 
 def test_filter_jobs_by_salary():
     data_to_filter = setup_test_filter_data()
-    filtered_jobs = list_window.JobsListWindow.filter_jobs_by_salary(data_to_filter, 85000)
+    filtered_jobs = JobsListWindow.filter_jobs_by_salary(data_to_filter, 85000)
     assert len(filtered_jobs) == 2  # Expecting 2 jobs with salary >= 85000
