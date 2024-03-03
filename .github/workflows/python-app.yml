@@ -45,4 +45,5 @@ jobs:
     - name: Test with pytest
       run: |
         pip install pytest
-        python -m pytest
+        pip install pytest-qt
+        pytest
