@@ -20,21 +20,21 @@ Requirements
 - DBBrowserLite or Pycharm Professional to view database.
 - Python 3.9 or 3.10 (python --version)
 - This project should handle standard python packages for you. If not see requirements.txt
-- The project relies on a library known as serpAPI to fetch google results.
-- If you have issues with the project running. You are likely missing the serpAPI package, and python is not detecting
-  any serpAPI packages. Run these commands to install the package
+- Run this command to instal all required packages
 - Install pip in terminal
     - linux: python -m ensurepip --upgrade
     - mac: python -m ensurepip --upgrade
     - windows: py -m ensurepip --upgrade
-- Install serpAPI in your project directory
-    - pip install google-search-results
-- Install openpyxl in your project directory
-  - pip install openpyxl
+- Install all required packages
+  pip install -r requirements.txt
 
-secrets.py
+*** NOTE!!!! Past versions of the program used the file secrets.py
+for secret handling, this was renamed to secrets_file.py to avoid issues with
+an import error. If you are having issues with your secrets file this is why***
 
-- The user must create a file named "secrets.py" in the project directory and type in a single line of code
+secrets_file.py
+
+- The user must create a file named "secrets_file.py" in the project directory and type in a single line of code
 - api_key = "insert your api key here"
 - Otherwise, the project will not run
 
