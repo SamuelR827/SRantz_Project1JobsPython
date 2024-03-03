@@ -4,13 +4,14 @@ import sqlite3
 import sys
 
 from PySide6.QtQuick import QQuickWindow, QSGRendererInterface
-from gui_functions import display_job_list_data
+
 from database_functions import create_db_connection
 from database_functions import db_close
 from database_functions import save_searched_data_to_database
 from database_functions import setup_db
 from excel_functions import add_excel_job_data
 from excel_functions import load_job_workbook
+from gui_functions import display_job_list_data
 from serpAPI import secrets_handling
 from serpAPI import serpapi_search
 from util_functions import get_user_input
@@ -52,14 +53,15 @@ def perform_search(cursor: sqlite3.Cursor, num_pages: int) -> None:
 
 
 def main() -> None:
-    """ The main function for running the program. Creates a connection to sqlite to handle generated data
-    and calls the perform_search function to generate that data with the created database as well as
-    hard-coded number of pages to generate. A workbook is created for the job data in the Excel sheet
-    and all the data from the Excel sheet is added to the database. """
+    """ The main function for running the program. Creates a connection to sqlite to handle generated data and calls
+    the perform_search function to generate that data with the created database as well as hard-coded number of pages
+    to generate. A workbook is created for the job data in the Excel sheet and all the data from the Excel sheet is
+    added to the database. A GUI is created after the processing is complete for user interactivity"""
+    # create graphics interface for gui
     QQuickWindow.setGraphicsApi(QSGRendererInterface.GraphicsApi.Software)
     # hardcoded variable for desired amount of pages for now
     # you may change this if desired
-    num_pages = 1
+    num_pages = 5
     # call load_job_workbook function to initialize workbook
     job_workbook = load_job_workbook('Sprint3Data.xlsx')
     # create database connection by calling the connection function
@@ -70,8 +72,9 @@ def main() -> None:
     perform_search(cursor, num_pages)
     # call add_excel_job_data function to add excel data to database
     add_excel_job_data(cursor, job_workbook)
-    # close the database by calling the close database function
+    # display the gui after data is added and processed
     display_job_list_data(cursor)
+    # close the database by calling the close database function
     db_close(connection)
 
 

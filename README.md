@@ -13,6 +13,8 @@ Install/Run directions
 - Follow directions that print in the script
 - Find your job_results.db file in project directory
 - View the database in either db_browser or IDE built in database viewer
+- A GUI will open that the user can filter through the list of data. View details for each data and map for all the filtered data
+- To apply and filters in text fields you must hit the apply filter button
 
 Requirements
 
@@ -46,6 +48,12 @@ press enter or leave the location blank to skip. This program will then use serp
 of the user's entered job and generate json results into a database. The program will also
 fetch data from an Excel spreadsheet provided in the project. Some of this spreadsheet has missing
 data, so for that missing data in the database it will be set to N/A.
+
+A GUI will be created after a search is finished. From here the user can view all jobs in a list 
+containing the job name and company name. The user can also view more information on a single job by clicking on a job 
+from the list. The user can also filter out jobs by keyword, location, if the job is remote or not, and minimum salary.
+The user can also view the data on a map that points to where the job is located. The map will only 
+display the data that is on the list. So if the user filtered out data, only the filtered data will have markers,
 
 The database is named job_results.db and in the project directory that was cloned.
 Three tables are generated jobs, job_links, job_qualifications.
@@ -87,3 +95,7 @@ This can be changed in the main.py file with any python compatible text editor.
 
 I don't believe there is anything missing from the project. But this project cannot handle every
 single odd case for where information is found in the json_data.
+
+The map generates pretty slow if you have alot of data in the filter, for example if you don't filter everything.
+I implemented caching to help with the performance, but I am not sure if it helps or if I did it correctly.
+Some of the data will be skipped on the map if it's location isn't recognized by folium. (I.E to small of a city).

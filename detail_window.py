@@ -1,3 +1,4 @@
+""" This module handles the creation and handling of the job detail window that opens for each job. """
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QWidget, QLabel, QLineEdit, QTextEdit, QScrollArea, QVBoxLayout
 
@@ -10,6 +11,7 @@ class JobDetailWindow(QWidget):
         self.setup_window()
 
     def setup_window(self):
+        """ Create the job list window"""
         self.setWindowTitle(f"{self.data['job_title']} Detail Window")
 
         # Create scroll area for job fields
@@ -46,6 +48,7 @@ class JobDetailWindow(QWidget):
             field_layout.addWidget(self.description_field)
 
     def create_field(self, label_text, data, layout):
+        """This function creates a field based on parameters for easier modularity and readability"""
         label = QLabel(label_text, self)
         layout.addWidget(label)
 
@@ -54,18 +57,26 @@ class JobDetailWindow(QWidget):
         layout.addWidget(line_edit)
 
     def create_field_links(self, layout):
+        """ This function handles the creation of the links for the jobs that have links."""
         job_links = self.data['job_links']
+        # don't create the field if the job has no links for simple gui
         if job_links != 'N/A':
             if job_links != 'No Related Links Specified':
+                # get link count to print each link with a number
                 link_count = 1
+                # create a field for each link
                 for _ in job_links:
                     self.create_field(f"Job Link {link_count}: ", self.data['job_links'][link_count - 1], layout)
                     link_count += 1
 
     def create_field_qualifications(self, layout):
+        """ This function handles the creation of the qualifications for the jobs that have qualifications."""
         job_qualifications = self.data['job_qualifications']
+        # don't create the field if the job has no qualifications for simple gui
         if isinstance(job_qualifications, list) and 'No Qualifications Specified' not in job_qualifications:
+            # get qualification count to print each link with a number
             qualification_count = 1
+            # create a field for each qualification
             for qualification in job_qualifications:
                 self.create_field(f"Job Qualification {qualification_count}: ", qualification, layout)
                 qualification_count += 1

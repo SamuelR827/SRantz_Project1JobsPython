@@ -1,12 +1,15 @@
-""" This module handles automated unit tests. We have five automated tests to make sure
-data is properly searched through using serpapi and excel. As well as to make sure this
-data is properly inserted into the database. """
+""" This module handles automated unit tests. We have five automated tests to make sure data is properly searched
+through using serpapi and excel. As well as to make sure this data is properly inserted into the database. There are
+tests for the user filter functions and the opening of the gui list"""
+
+import time
 from sqlite3 import Connection, Cursor
 from typing import Generator, Any
 
 import pytest
+from PySide6.QtCore import QObject, Signal
+from PySide6.QtTest import QTest
 
-from list_window import JobsListWindow
 from database_functions import create_db_connection
 from database_functions import create_table_job_links
 from database_functions import create_table_job_list
@@ -15,8 +18,11 @@ from database_functions import insert_worksheet_data_to_database
 from database_functions import save_searched_data_to_database
 from excel_functions import add_excel_job_data
 from excel_functions import load_job_workbook
+from list_window import JobsListWindow
 from serpAPI import secrets_handling
 from serpAPI import serpapi_search
+
+pytest_plugins = "pytestqt"
 
 
 @pytest.fixture(scope="module")
@@ -24,7 +30,7 @@ def mock_db_connection():
     """ This function creates a mock database for testing the function
     that saves data to the database."""
     # create a mock db_file
-    db_file = 'tests/test_results.db'
+    db_file = 'test_results.db'
     # create a mock connection and cursor
     test_connection, test_cursor = create_db_connection(db_file)
 
@@ -45,7 +51,7 @@ def test_read_excel_sheet():
     """ This test verifies that reading the xlsx sheet work properly. Making
     sure there is at least 300 rows and exactly 10 columns in the sheet."""
     # get excel workbook
-    job_worksheet = load_job_workbook('tests/Sprint3Data.xlsx')
+    job_worksheet = load_job_workbook('Sprint3Data.xlsx')
     # get row count of Excel worksheet
     row_count = job_worksheet.max_row
     # assert it has at least 300 rows
@@ -60,7 +66,7 @@ def test_save_excel_data_to_database(mock_db_connection):
     """ This test verifies that saving the xlsx sheet works properly. Making
     sure that all the data in the workbook is added to our test database."""
     # get excel workbook
-    job_worksheet = load_job_workbook('tests/Sprint3Data.xlsx')
+    job_worksheet = load_job_workbook('Sprint3Data.xlsx')
     # create mock connection and cursor for mock database
     test_connection, test_cursor = mock_db_connection
     # add excel data to mock database
@@ -175,54 +181,112 @@ def test_search_results_count() -> None:
 
 
 def setup_test_filter_data():
+    """ Create some sample data for the filter and gui test functions."""
     jobs = [
         {
+            'job_id': '123',
             'job_title': 'Software Engineer',
+            'company_name': 'ABC Company',
             'job_description': 'We are hiring a Software Engineer',
             'job_qualifications': ['Python', 'Java'],
             'job_location': 'Boston, MA',
+            'job_posted': '1 day ago',
             'job_remote': 'No',
-            'salary_min': 80000
+            'salary_min': 80000,
+            'salary_max': 100000,
+            'salary_rate': 'yearly',
+            'job_links': 'N/A'
         },
         {
+            'job_id': '456',
             'job_title': 'Data Scientist',
+            'company_name': 'XYZ Corporation',
             'job_description': 'We are looking for a Data Scientist',
             'job_qualifications': ['Python', 'R'],
             'job_location': 'New York, NY',
+            'job_posted': '1 day ago',
             'job_remote': 'Yes',
-            'salary_min': 90000
+            'salary_min': 90000,
+            'salary_max': 100000,
+            'salary_rate': 'yearly',
+            'job_links': 'N/A'
         },
         {
+            'job_id': '789',
             'job_title': 'Web Developer',
+            'company_name': '123 Web Development',
             'job_description': 'We need a Web Developer with HTML and CSS skills',
             'job_qualifications': ['HTML', 'CSS', 'JavaScript'],
             'job_location': 'San Francisco, CA',
+            'job_posted': '1 day ago',
             'job_remote': 'No',
-            'salary_min': 85000
+            'salary_min': 85000,
+            'salary_max': 100000,
+            'salary_rate': 'yearly',
+            'job_links': 'N/A'
         }
     ]
     return jobs
 
 
 def test_filter_jobs_by_keyword():
+    """Make sure filtering by keyword returns correct results based on the sample data. """
     data_to_filter = setup_test_filter_data()
     filtered_jobs = JobsListWindow.filter_jobs_by_keyword(data_to_filter, 'Python')
-    assert len(filtered_jobs) == 2  # Expecting 2 jobs matching keyword 'Engineer'
+    assert len(filtered_jobs) == 2
 
 
 def test_filter_jobs_by_location():
+    """Make sure filtering by location returns correct results based on the sample data. """
     data_to_filter = setup_test_filter_data()
     filtered_jobs = JobsListWindow.filter_jobs_by_location(data_to_filter, 'Boston')
-    assert len(filtered_jobs) == 1  # Expecting 1 job in Boston
+    assert len(filtered_jobs) == 1
 
 
 def test_filter_remote_jobs():
+    """Make sure filtering by remote jobs returns correct results based on the sample data. """
     data_to_filter = setup_test_filter_data()
     filtered_jobs = JobsListWindow.filter_remote_jobs(data_to_filter)
-    assert len(filtered_jobs) == 1  # Expecting 1 remote job
+    assert len(filtered_jobs) == 1
 
 
 def test_filter_jobs_by_salary():
+    """Make sure filtering by salary returns correct results based on the sample data."""
     data_to_filter = setup_test_filter_data()
     filtered_jobs = JobsListWindow.filter_jobs_by_salary(data_to_filter, 85000)
-    assert len(filtered_jobs) == 2  # Expecting 2 jobs with salary >= 85000
+    assert len(filtered_jobs) == 2
+
+
+@pytest.fixture()
+def window():
+    """ This function creates a test window for testing purposes"""
+    job_data = setup_test_filter_data()
+    window = JobsListWindow(job_data)
+    # sleep to prevent test failing before window is initialized
+    while window.list_control is None:
+        time.sleep(0.1)
+    return window
+
+
+def test_display_job_details(qtbot, window):
+    """ A test with a dummy list gui to make sure the gui will display properly"""
+    list_control = window.list_control
+    item_to_display = list_control.item(0)
+
+    # Wait for the window to be fully initialized to prevent test fail
+    QTest.qWaitForWindowExposed(window)
+
+    # Create a signal for the test
+    class WindowCloseSignal(QObject):
+        closed = Signal()
+
+    receiver_obj = WindowCloseSignal()
+
+    # connect detail window to created signal
+    window.detail_window_displayed.connect(receiver_obj.closed.emit)
+
+    # wait for signal and assert that its displayed
+    with qtbot.waitSignal(receiver_obj.closed):
+        list_control.setCurrentItem(item_to_display)
+
+    assert window.data_window.isVisible()

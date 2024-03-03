@@ -1,3 +1,4 @@
+""" This function handles the data processing and utility for the gui """
 import sys
 
 from database_functions import get_all_job_data_from_table
@@ -8,13 +9,15 @@ import list_window
 
 
 def display_job_list_data(cursor):
-    qt_app = PySide6.QtWidgets.QApplication(sys.argv)  # sys.argv is the list of command line arguments
+    """ This function sets up the gui and gets the job_data to display"""
+    qt_app = PySide6.QtWidgets.QApplication(sys.argv)
     job_data = get_job_data_for_gui(cursor)
     _ = list_window.JobsListWindow(job_data)
     sys.exit(qt_app.exec())
 
 
 def get_job_links_for_gui(cursor, job_id):
+    """ This function compiles a list of all the job link data by getting from the database"""
     job_link_list = []
     link_data = get_all_job_links_from_table(cursor, job_id)
     for link_entry in link_data:
@@ -23,6 +26,7 @@ def get_job_links_for_gui(cursor, job_id):
 
 
 def get_job_qualifications_for_gui(cursor, job_id):
+    """ This function compiles a list of all the job qualifications data by getting from the database."""
     job_qualification_list = []
     qualification_data = get_all_job_qualifications_from_table(cursor, job_id)
     for qualification_entry in qualification_data:
@@ -31,6 +35,7 @@ def get_job_qualifications_for_gui(cursor, job_id):
 
 
 def get_job_data_for_gui(cursor):
+    """ This function compiles a list of all the job data by getting from the database."""
     final_data_list = []
     job_data = get_all_job_data_from_table(cursor)
     for job_entry in job_data:

@@ -177,6 +177,7 @@ def save_searched_data_to_database(cursor: sqlite3.Cursor, json_data: List[Dict[
 
 
 def insert_worksheet_data_to_database(cursor: sqlite3.Cursor, job_data):
+    """ Handling the excel data sheet for the database."""
     try:
         statement = '''INSERT OR IGNORE INTO jobs (job_id, title, company, description, location,
         remote, posted, salary_min, salary_max, salary_rate)
@@ -187,18 +188,21 @@ def insert_worksheet_data_to_database(cursor: sqlite3.Cursor, job_data):
 
 
 def get_all_job_data_from_table(cursor: sqlite3.Cursor):
+    """ Get all data from the job table for the gui."""
     cursor.execute('''SELECT * FROM jobs''')
     job_data = cursor.fetchall()
     return job_data
 
 
 def get_all_job_links_from_table(cursor: sqlite3.Cursor, job_id):
+    """ Get all links from foreign table for the gui."""
     cursor.execute('''SELECT * FROM job_links WHERE job_id = ?''', (job_id,))
     job_data = cursor.fetchall()
     return job_data
 
 
 def get_all_job_qualifications_from_table(cursor: sqlite3.Cursor, job_id):
+    """ Get all qualifications from foreign table for the gui."""
     cursor.execute('''SELECT * FROM job_qualifications WHERE job_id = ?''', (job_id,))
     job_data = cursor.fetchall()
     return job_data
