@@ -3,6 +3,9 @@ data is properly searched through using serpapi and excel. As well as to make su
 data is properly inserted into the database. """
 from sqlite3 import Connection, Cursor
 from typing import Generator, Any
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import (QWidget, QPushButton, QListWidget, QApplication, QListWidgetItem, QLabel,
+                               QVBoxLayout, QLineEdit, QCheckBox)
 
 import pytest
 
