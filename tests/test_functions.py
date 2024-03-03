@@ -6,7 +6,7 @@ from typing import Generator, Any
 
 import pytest
 
-import gui.list_window as list_window
+from ..gui import list_window
 from database_functions import create_db_connection
 from database_functions import create_table_job_links
 from database_functions import create_table_job_list
