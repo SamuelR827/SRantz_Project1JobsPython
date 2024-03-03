@@ -4,13 +4,13 @@ from database_functions import get_all_job_data_from_table
 from database_functions import get_all_job_links_from_table
 from database_functions import get_all_job_qualifications_from_table
 import PySide6.QtWidgets
-import gui.list_window
+import list_window
 
 
 def display_job_list_data(cursor):
     qt_app = PySide6.QtWidgets.QApplication(sys.argv)  # sys.argv is the list of command line arguments
     job_data = get_job_data_for_gui(cursor)
-    _ = gui.list_window.JobsListWindow(job_data)
+    _ = list_window.JobsListWindow(job_data)
     sys.exit(qt_app.exec())
 
 
