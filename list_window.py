@@ -10,6 +10,7 @@ import map_window as map_window
 class JobsListWindow(QWidget):
     # custom signal for testing purposes
     detail_window_displayed = Signal()
+
     def __init__(self, job_data):
         super().__init__()
         self.map_window = None
@@ -22,7 +23,6 @@ class JobsListWindow(QWidget):
         self.remote_filter = QCheckBox("Remote Jobs", self)
         self.salary_filter = QLineEdit(self)
         self.setup_window()
-
 
     def setup_window(self):
         self.setWindowTitle("Job Data for Capstone Project 1")
