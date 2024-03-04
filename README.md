@@ -20,7 +20,7 @@ Requirements
 
 - Git (only to clone the project)
 - DBBrowserLite or Pycharm Professional to view database.
-- Python 3.9 or 3.10 (python --version)
+- Python 3.12(python --version) - I had to update to 3.12 to solve an issue with pyside6. If you have issues with older python versions try 3.12
 - This project should handle standard python packages for you. If not see requirements.txt
 - Run this command to instal all required packages
 - Install pip in terminal
