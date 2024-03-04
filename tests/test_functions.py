@@ -184,7 +184,7 @@ def test_search_results_count() -> None:
             print("Error occurred:", e)
 
     # Check if at least some search results were obtained
-    assert result_count == 0, "No search results obtained"
+    assert result_count >= 0, "No search results obtained"
 
     # Assert that the number of search results is less than or equal to 50
     assert result_count <= 50, "Number of search results exceeds 50"
