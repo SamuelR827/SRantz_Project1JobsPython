@@ -167,7 +167,7 @@ def test_search_results_count() -> None:
     # keep track of pages
     page_offset = 0
     # variable to generate 5 pages - 50 results
-    num_pages = 5
+    num_pages = 5  # noqa: F841
     # loop based on the amount of pages specified
     for page in range(1, num_pages + 1):
         try:
@@ -183,7 +183,6 @@ def test_search_results_count() -> None:
             print("Error occurred:", e)
 
     assert result_count == 50, "Number of search results is not 50"
-
 
 
 def setup_test_filter_data():
