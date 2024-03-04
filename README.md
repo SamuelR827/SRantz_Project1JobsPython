@@ -53,7 +53,8 @@ A GUI will be created after a search is finished. From here the user can view al
 containing the job name and company name. The user can also view more information on a single job by clicking on a job 
 from the list. The user can also filter out jobs by keyword, location, if the job is remote or not, and minimum salary.
 The user can also view the data on a map that points to where the job is located. The map will only 
-display the data that is on the list. So if the user filtered out data, only the filtered data will have markers,
+display the data that is on the list. So if the user filtered out data, only the filtered data will have markers. If you hit
+the apply filter button with the map open, you will have to reopen the map.
 
 The database is named job_results.db and in the project directory that was cloned.
 Three tables are generated jobs, job_links, job_qualifications.

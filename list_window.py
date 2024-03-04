@@ -128,7 +128,7 @@ class JobsListWindow(QWidget):
 
         # Update the map with the filtered data
         if self.map_window:
-            self.map_window.filter_data(filtered_jobs)
+            self.map_window.close()
 
         # Close the detail window if it's open
         if self.data_window:
