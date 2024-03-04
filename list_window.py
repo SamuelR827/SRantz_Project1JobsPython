@@ -123,12 +123,12 @@ class JobsListWindow(QWidget):
         if salary:
             filtered_jobs = self.filter_jobs_by_salary(filtered_jobs, salary)
 
+        self.list_control.clear()
+        self.put_data_in_list(filtered_jobs)
+
         # Update the map with the filtered data
         if self.map_window:
             self.map_window.filter_data(filtered_jobs)
-
-        self.list_control.clear()
-        self.put_data_in_list(filtered_jobs)
 
         # Close the detail window if it's open
         if self.data_window:

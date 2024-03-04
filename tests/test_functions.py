@@ -170,14 +170,20 @@ def test_search_results_count() -> None:
     num_pages = 5
     # loop based on the amount of pages specified
     for page in range(1, num_pages + 1):
-        # call serpapi search with sample query and return jobs_results as json
-        search_results_as_json = serpapi_search(query, location, api_key, page, page_offset)
-        # count each item in the list jobs_results
-        result_count += len(search_results_as_json)
-        # increment page offset
-        page_offset += 10
-    # make sure the result count is greater or equal to 50, print failing message otherwise
-    assert result_count >= 50, f"Expected at least 50 data items, but got {result_count}"
+        try:
+            # call serpapi search with sample query and return jobs_results as json
+            search_results_as_json = serpapi_search(query, location, api_key, page, page_offset)
+            if search_results_as_json is None:
+                # Handle the case when API search is exhausted
+                print("Out of API searches. Skipping page", page)
+                break
+            # count each item in the list jobs_results
+            result_count += len(search_results_as_json)
+        except TypeError as e:
+            print("Error occurred:", e)
+
+    assert result_count == 50, "Number of search results is not 50"
+
 
 
 def setup_test_filter_data():
