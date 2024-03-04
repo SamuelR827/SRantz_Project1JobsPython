@@ -69,7 +69,7 @@ def main() -> None:
     # call the database function
     setup_db(cursor)
     # call perform_search function with desired page count
-    # perform_search(cursor, num_pages)
+    perform_search(cursor, num_pages)
     # call add_excel_job_data function to add excel data to database
     add_excel_job_data(cursor, job_workbook)
     # display the gui after data is added and processed
